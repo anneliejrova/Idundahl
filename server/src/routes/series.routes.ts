@@ -62,6 +62,7 @@ seriesRouter.get("/:slug/:variantSlug", async (req, res, next) => {
     .from("series_variant")
     .select("id, series_id")
     .eq("slug", variantSlug)
+    .eq("series_id", series.id)
     .maybeSingle();
 
   if (variantError) {
@@ -70,10 +71,6 @@ seriesRouter.get("/:slug/:variantSlug", async (req, res, next) => {
 
   if (!variant) {
     return res.status(404).json({ error: "Variant hittades inte." });
-  }
-
-  if (variant.series_id !== series.id) {
-    return res.status(404).json({ error: "Variant hör inte till angiven serie." });
   }
 
   const { data: products, error: productsError } = await supabase
