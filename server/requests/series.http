@@ -1,5 +1,17 @@
+### Hämta serien Xevrine, huvudvariant + produkter
+GET http://localhost:8000/api/series/xevrine
+
+### Hämta serien Lovika, variant + produkter
+GET http://localhost:8000/api/series/lovika/white
+
+### Ogiltig serie-slug, giltig variant-slug -> ska ge 404
 GET http://localhost:8000/api/series/blah/blue
 
+### Giltig serie-slug, ogiltig variant-slug -> ska ge 404
+GET http://localhost:8000/api/series/lovika/black
 
+### Lista alla serier
+GET http://localhost:8000/api/series
 
-
+### Serie som inte finns alls -> vad blir statuskoden?
+GET http://localhost:8000/api/series/nonexistent-series
