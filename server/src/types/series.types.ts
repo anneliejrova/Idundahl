@@ -1,4 +1,5 @@
 import type { Product } from "./product.types.js";
+import type { Credit } from "./credit.types.js";
 
 export interface SeriesVariant {
   id: string;
@@ -6,13 +7,6 @@ export interface SeriesVariant {
   slug: string;
   image_url: string | null;
   is_main: boolean;
-}
-
-export interface Credit {
-  id: string;
-  name: string;
-  type: "person" | "company";
-  description: string;
 }
 
 export interface Series {

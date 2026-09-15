@@ -4,6 +4,8 @@ import type { SeriesVariant } from "../types/series.types.js";
 
 export const seriesRouter = Router();
 
+// Get all series with their main variant
+
 seriesRouter.get("/", async (req, res, next) => {
   const { data, error } = await supabase
     .from("series")
@@ -12,8 +14,8 @@ seriesRouter.get("/", async (req, res, next) => {
     id,
     name,
     slug,
-    designer:credit!series_designer_id_fkey ( id, name),
-    collaborator:credit!series_collaborator_id_fkey ( id, name),
+    designer:credit!series_designer_id_fkey ( id, name ),
+    collaborator:credit!series_collaborator_id_fkey ( id, name ),
     series_variant!inner ( image_url )
   `,
     )
@@ -23,8 +25,31 @@ seriesRouter.get("/", async (req, res, next) => {
     return next(error);
   }
 
-  res.json(data);
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  const { data: recentProducts, error: recentError } = await supabase
+    .from("product")
+    .select("series_variant:series_variant_id ( series_id )")
+    .gte("published_at", sevenDaysAgo.toISOString());
+
+  if (recentError) {
+    return next(recentError);
+  }
+
+  const seriesWithNewProducts = new Set(
+    recentProducts.map((p: any) => p.series_variant.series_id),
+  );
+
+  const seriesWithBadge = data.map((s) => ({
+    ...s,
+    isNew: seriesWithNewProducts.has(s.id),
+  }));
+
+  res.json(seriesWithBadge);
 });
+
+// Get a specific series by slug, including its main variant and products
 
 seriesRouter.get("/:slug", async (req, res, next) => {
   const { slug } = req.params;
@@ -60,7 +85,7 @@ seriesRouter.get("/:slug", async (req, res, next) => {
   }
 
   const mainVariant = data.series_variant.find((v: SeriesVariant) => v.is_main);
-  
+
   if (!mainVariant) {
     return res.status(500).json({ error: "Serien saknar en huvudvariant." });
   }
@@ -70,13 +95,14 @@ seriesRouter.get("/:slug", async (req, res, next) => {
     .select("*")
     .eq("series_variant_id", mainVariant.id);
 
-
   if (productsError) {
     return next(productsError);
   }
 
   res.json({ ...data, mainVariantProducts: products });
 });
+
+// Get products for a specific series variant by series slug and variant slug
 
 seriesRouter.get("/:slug/:variantSlug", async (req, res, next) => {
   const { slug, variantSlug } = req.params;
