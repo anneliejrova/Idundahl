@@ -15,3 +15,6 @@ GET http://localhost:8000/api/series
 
 ### Serie som inte finns alls -> vad blir statuskoden?
 GET http://localhost:8000/api/series/nonexistent-series
+
+### 
+GET http://localhost:8000/api/series/xevrine

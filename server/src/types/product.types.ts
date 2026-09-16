@@ -18,3 +18,7 @@ export interface Product {
   stock_quantity: number;
   published_at: string | null;
 }
+
+export interface ProductWithBadge extends Product {
+  isNew: boolean;
+}

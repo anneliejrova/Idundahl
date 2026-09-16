@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { supabase } from "../config/supabaseClient.js";
 import type { SeriesVariant } from "../types/series.types.js";
+import { isNew } from "../utils/isNew.js";
 
 export const seriesRouter = Router();
 
@@ -90,6 +91,30 @@ seriesRouter.get("/:slug", async (req, res, next) => {
     return res.status(500).json({ error: "Serien saknar en huvudvariant." });
   }
 
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  const variantIds = data.series_variant.map((v: SeriesVariant) => v.id);
+
+  const { data: recentProducts, error: recentError } = await supabase
+    .from("product")
+    .select("series_variant_id")
+    .in("series_variant_id", variantIds)
+    .gte("published_at", sevenDaysAgo.toISOString());
+
+  if (recentError) {
+    return next(recentError);
+  }
+
+  const variantsWithNew = new Set(
+    recentProducts.map((p: any) => p.series_variant_id),
+  );
+
+  const seriesVariantWithBadge = data.series_variant.map((v: SeriesVariant) => ({
+    ...v,
+    isNew: variantsWithNew.has(v.id),
+  }));
+
   const { data: products, error: productsError } = await supabase
     .from("product")
     .select("*")
@@ -99,7 +124,12 @@ seriesRouter.get("/:slug", async (req, res, next) => {
     return next(productsError);
   }
 
-  res.json({ ...data, mainVariantProducts: products });
+  const mainVariantProducts = products.map((p) => ({
+    ...p,
+    isNew: isNew(p.published_at),
+  }));
+
+  res.json({ ...data, series_variant: seriesVariantWithBadge, mainVariantProducts });
 });
 
 // Get products for a specific series variant by series slug and variant slug
@@ -145,5 +175,10 @@ seriesRouter.get("/:slug/:variantSlug", async (req, res, next) => {
     return next(productsError);
   }
 
-  res.json(products);
+  const productsWithBadge = products.map((p) => ({
+  ...p,
+  isNew: isNew(p.published_at),
+}));
+
+  res.json(productsWithBadge);
 });

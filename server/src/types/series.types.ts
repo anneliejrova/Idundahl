@@ -1,4 +1,4 @@
-import type { Product } from "./product.types.js";
+import type { ProductWithBadge } from "./product.types.js";
 import type { Credit } from "./credit.types.js";
 
 export interface SeriesVariant {
@@ -9,6 +9,10 @@ export interface SeriesVariant {
   is_main: boolean;
 }
 
+export interface SeriesVariantWithBadge extends SeriesVariant {
+  isNew: boolean;
+}
+
 export interface Series {
   id: string;
   name: string;
@@ -16,6 +20,6 @@ export interface Series {
   description: string | null;
   designer: Pick<Credit, "id" | "name"> | null;
   collaborator: Pick<Credit, "id" | "name"> | null;
-  series_variant: SeriesVariant[];
-  mainVariantProducts: Product[];
+  series_variant: SeriesVariantWithBadge[];
+  mainVariantProducts: ProductWithBadge[];
 }
