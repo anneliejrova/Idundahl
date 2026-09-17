@@ -1,3 +1,5 @@
+import type { SeriesVariant } from "./series.types.js";
+
 export interface Product {
   id: string;
   series_variant_id: string;
@@ -22,3 +24,56 @@ export interface Product {
 export interface ProductWithBadge extends Product {
   isNew: boolean;
 }
+
+export interface ProductType {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface SeriesProductType {
+  id: string;
+  product_type: ProductType;
+}
+
+export interface ProductImage {
+  id: string;
+  image_url: string;
+  alt_text: string | null;
+  is_main: boolean;
+}
+
+export interface SimilarProduct {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  published_at: string | null;
+  isNew: boolean;
+  product_image: Pick<ProductImage, "image_url" | "is_main">[];
+}
+
+export interface ProductDetail {
+  id: string;
+  series_variant: SeriesVariant;
+  series_product_type: SeriesProductType;
+  product_image: ProductImage[];
+  sku: string;
+  ean: string | null;
+  name: string;
+  slug: string;
+  description: string | null;
+  size_label: string;
+  diameter_mm: number | null;
+  height_mm: number | null;
+  width_mm: number | null;
+  length_mm: number | null;
+  volume_ml: number | null;
+  price: number;
+  currency: string;
+  stock_quantity: number;
+  published_at: string | null;
+  isNew: boolean;
+  similarProducts: SimilarProduct[];
+}
+

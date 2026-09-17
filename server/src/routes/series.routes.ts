@@ -132,6 +132,38 @@ seriesRouter.get("/:slug", async (req, res, next) => {
   res.json({ ...data, series_variant: seriesVariantWithBadge, mainVariantProducts });
 });
 
+// Get product types for a specific series by series slug
+seriesRouter.get("/:slug/product-types", async (req, res, next) => {
+  const { slug } = req.params;
+
+  const { data: series, error: seriesError } = await supabase
+    .from("series")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (seriesError) {
+    return next(seriesError);
+  }
+
+  if (!series) {
+    return res.status(404).json({ error: "Serien hittades inte." });
+  }
+
+  const { data, error } = await supabase
+    .from("series_product_type")
+    .select("product_type:product_type_id ( id, name, slug )")
+    .eq("series_id", series.id);
+
+  if (error) {
+    return next(error);
+  }
+
+  const productTypes = data.map((row: any) => row.product_type);
+
+  res.json(productTypes);
+});
+
 // Get products for a specific series variant by series slug and variant slug
 
 seriesRouter.get("/:slug/:variantSlug", async (req, res, next) => {
@@ -182,3 +214,4 @@ seriesRouter.get("/:slug/:variantSlug", async (req, res, next) => {
 
   res.json(productsWithBadge);
 });
+

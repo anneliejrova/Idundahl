@@ -10,11 +10,35 @@ GET http://localhost:8000/api/series/blah/blue
 ### Giltig serie-slug, ogiltig variant-slug -> ska ge 404
 GET http://localhost:8000/api/series/lovika/black
 
-### Lista alla serier
-GET http://localhost:8000/api/series
+### Hämta serien Lovika (huvudvariant + produkter + designer/collaborator)
+GET http://localhost:8000/api/series/lovika
+
+### Hämta en specifik icke-huvud-variant (Blue)
+GET http://localhost:8000/api/series/lovika/blue
+
+### Slug-kollision: Geometria White ska INTE ge Lovikas produkter
+GET http://localhost:8000/api/series/geometria/white
+
+### Giltiga slugs var för sig, men fel kombination -> ska ge 404
+GET http://localhost:8000/api/series/xevrine/blue
+
+### Ogiltig serie-slug, giltig variant-slug -> ska ge 404
+GET http://localhost:8000/api/series/blah/blue
+
+### Giltig serie-slug, ogiltig variant-slug -> ska ge 404
+GET http://localhost:8000/api/series/lovika/black
 
 ### Serie som inte finns alls -> vad blir statuskoden?
 GET http://localhost:8000/api/series/nonexistent-series
 
-### 
-GET http://localhost:8000/api/series/xevrine
+### Lista alla serier (med isNew per serie)
+GET http://localhost:8000/api/series
+
+### Produkttyper för en specifik serie (nya endpointen)
+GET http://localhost:8000/api/series/lovika/product-types
+
+### Produkttyper för Busfrö (kolla att Barnmugg + 2 handtags mugg + Delad tallrik finns med)
+GET http://localhost:8000/api/series/busfro/product-types
+
+### Helt felstavad väg (ingen route matchar alls) -> catch-all 404
+GET http://localhost:8000/api/lovika/red
