@@ -77,3 +77,19 @@ export interface ProductDetail {
   similarProducts: SimilarProduct[];
 }
 
+export interface CreateProductInput {
+  series_variant_id: string;
+  series_product_type_id: string;
+  name: string;
+  price: number;
+  stock_quantity: number;
+  size_label?: string;
+  diameter_mm?: number;
+  height_mm?: number;
+  width_mm?: number;
+  length_mm?: number;
+  volume_ml?: number;
+  ean?: string;
+  description?: string;
+  image_url?: string;
+}

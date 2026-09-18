@@ -1,0 +1,68 @@
+# Kom ihåg att köra sql raddering mellan varje test som lyckas
+# DELETE FROM product WHERE slug = 'lovika-white-kakfat';
+
+### Giltig produkt, allt korrekt -> 201 Created
+POST http://localhost:8000/api/products
+Content-Type: application/json
+
+{
+  "series_variant_id": "f31acdf1-9e4a-4f2e-ab5e-00b03c09c08e",
+  "series_product_type_id": "7e9e1006-b7e9-4a19-a9ee-d7966306db35",
+  "name": "Lovika White Kakfat",
+  "price": 249,
+  "stock_quantity": 5,
+  "size_label": "28 cm",
+  "diameter_mm": 280
+}
+
+### Mått angivna, size_label SAKNAS -> fel "size_label krävs..."
+POST http://localhost:8000/api/products
+Content-Type: application/json
+
+{
+  "series_variant_id": "f31acdf1-9e4a-4f2e-ab5e-00b03c09c08e",
+  "series_product_type_id": "7e9e1006-b7e9-4a19-a9ee-d7966306db35",
+  "name": "Lovika White Kakfat",
+  "price": 249,
+  "stock_quantity": 5,
+  "diameter_mm": 280
+}
+
+### Utan mått eller size_label -> ska falla tillbaka på "Lagom", sparas OK
+POST http://localhost:8000/api/products
+Content-Type: application/json
+
+{
+  "series_variant_id": "f31acdf1-9e4a-4f2e-ab5e-00b03c09c08e",
+  "series_product_type_id": "7e9e1006-b7e9-4a19-a9ee-d7966306db35",
+  "name": "Lovika White Kakfat",
+  "price": 249,
+  "stock_quantity": 5
+}
+
+### Med image_url -> skapar BÅDE product OCH product_image
+POST http://localhost:8000/api/products
+Content-Type: application/json
+
+{
+  "series_variant_id": "f31acdf1-9e4a-4f2e-ab5e-00b03c09c08e",
+  "series_product_type_id": "7e9e1006-b7e9-4a19-a9ee-d7966306db35",
+  "name": "Lovika White Kakfat",
+  "price": 249,
+  "stock_quantity": 5,
+  "size_label": "28 cm",
+  "diameter_mm": 280,
+  "image_url": "https://fnnyyflzqqvqwanjmnht.supabase.co/storage/v1/object/public/images/lovika/white/product_img/kakfat"
+}
+
+### Ogiltig kombination (Lovika-variant + Xévrine-produkttyp) -> "olika serier"-fel
+POST http://localhost:8000/api/products
+Content-Type: application/json
+
+{
+  "series_variant_id": "f31acdf1-9e4a-4f2e-ab5e-00b03c09c08e",
+  "series_product_type_id": "0e1c469a-6dbc-46d0-b51d-7954192a5f53",
+  "name": "Fel kombination-test",
+  "price": 100,
+  "stock_quantity": 1
+}

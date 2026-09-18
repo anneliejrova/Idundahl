@@ -8,6 +8,8 @@ dotenv.config();
 
 const app = express();
 
+app.use(express.json());
+
 app.use("/api/series", seriesRouter);
 app.use("/api/products", productRouter);
 
