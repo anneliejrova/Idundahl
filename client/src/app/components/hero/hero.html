@@ -1,0 +1,15 @@
+@if (heroSeries(); as series) {
+<section class="hero">
+    <img [src]="series.mood_image_url + '.webp'" alt="" class="hero-image" />
+    <div class="hero-content">
+        <h1>{{ series.name }}</h1>
+        @if (series.designer) {
+        <p>Design av {{ series.designer.name }}</p>
+        }
+        @if (series.description) {
+        <p class="hero-description">{{ firstParagraph(series.description) }}</p>
+        }
+        <a [routerLink]="['/series', series.slug]" class="hero-link">Läs mer →</a>
+    </div>
+</section>
+}
