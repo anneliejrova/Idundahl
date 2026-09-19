@@ -31,9 +31,26 @@ export interface ProductType {
   slug: string;
 }
 
+export interface Shape {
+  slug: string;
+}
+
+export interface ProductTypeWithShape extends ProductType {
+  shape: Shape | null;
+}
+
 export interface SeriesProductType {
   id: string;
   product_type: ProductType;
+}
+
+export interface SeriesProductTypeWithShape {
+  id: string;
+  product_type: ProductTypeWithShape;
+}
+
+export interface SeriesProductTypeShapeOnly {
+  product_type: { shape: Shape | null };
 }
 
 export interface ProductImage {
@@ -51,12 +68,13 @@ export interface SimilarProduct {
   published_at: string | null;
   isNew: boolean;
   product_image: Pick<ProductImage, "image_url" | "is_main">[];
+  series_product_type: SeriesProductTypeShapeOnly;
 }
 
 export interface ProductDetail {
   id: string;
   series_variant: SeriesVariant;
-  series_product_type: SeriesProductType;
+  series_product_type: SeriesProductTypeWithShape;
   product_image: ProductImage[];
   sku: string;
   ean: string | null;
