@@ -18,6 +18,7 @@ export interface Series {
   name: string;
   slug: string;
   description: string | null;
+  mood_image_url: string | null; 
   designer: Pick<Credit, "id" | "name"> | null;
   collaborator: Pick<Credit, "id" | "name"> | null;
   series_variant: SeriesVariantWithBadge[];

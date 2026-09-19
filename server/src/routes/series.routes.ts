@@ -10,16 +10,16 @@ export const seriesRouter = Router();
 seriesRouter.get("/", async (req, res, next) => {
   const { data, error } = await supabase
     .from("series")
-    .select(
-      `
-    id,
-    name,
-    slug,
-    designer:credit!series_designer_id_fkey ( id, name ),
-    collaborator:credit!series_collaborator_id_fkey ( id, name ),
-    series_variant!inner ( image_url )
-  `,
-    )
+    .select(`
+      id,
+      name,
+      slug,
+      description,
+      mood_image_url,
+      designer:credit!series_designer_id_fkey ( id, name ),
+      collaborator:credit!series_collaborator_id_fkey ( id, name ),
+      series_variant!inner ( image_url )
+    `,)
     .eq("series_variant.is_main", true);
 
   if (error) {
