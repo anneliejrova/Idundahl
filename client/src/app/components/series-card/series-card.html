@@ -1,0 +1,16 @@
+<article class="series-card">
+  <app-themed-image
+    [baseUrl]="series().series_variant[0]?.image_url ?? null"
+    fallbackUrl="https://fnnyyflzqqvqwanjmnht.supabase.co/storage/v1/object/public/images/shapes/serie"
+    [alt]="series().name"
+  />
+  <div class="series-card-content">
+    <h3>{{ series().name }}</h3>
+    @if (series().designer) {
+      <p class="series-card-designer">Design av {{ series().designer!.name }}</p>
+    }
+    <a [routerLink]="['/series', series().slug]" class="series-card-link">
+      Se övriga serien →
+    </a>
+  </div>
+</article>

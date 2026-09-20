@@ -1,0 +1,22 @@
+.series-card {
+  display: block;
+}
+
+.series-card-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.series-card-content {
+  padding: var(--space-sm) 0;
+}
+
+.series-card-designer {
+  color: var(--color-text);
+}
+
+.series-card-link {
+  color: var(--color-prominent);
+  text-decoration: underline;
+}

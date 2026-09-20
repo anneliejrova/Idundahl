@@ -1,6 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { SeriesService } from '../../services/series.service';
 import type { Series } from '../../models/series.model';
 
 @Component({
@@ -9,18 +8,15 @@ import type { Series } from '../../models/series.model';
   templateUrl: './hero.html',
   styleUrl: './hero.css',
 })
-export class Hero implements OnInit {
-  private seriesService = inject(SeriesService);
-  heroSeries = signal<Series | null>(null);
+export class Hero {
+  allSeries = input.required<Series[]>();
 
-  ngOnInit() {
-    this.seriesService.getAll().subscribe((allSeries) => {
-      const withMood = allSeries.filter((s) => s.mood_image_url !== null);
-      if (withMood.length === 0) return;
-      const randomIndex = Math.floor(Math.random() * withMood.length);
-      this.heroSeries.set(withMood[randomIndex]);
-    });
-  }
+  heroSeries = computed(() => {
+    const withMood = this.allSeries().filter((s) => s.mood_image_url !== null);
+    if (withMood.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * withMood.length);
+    return withMood[randomIndex];
+  });
 
   firstParagraph(text: string | null): string {
     if (!text) return '';

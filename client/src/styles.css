@@ -29,6 +29,8 @@
   --space-md: 1.5rem;
   --space-lg: 2.5rem;
   --space-xl: 4rem;
+
+   --max-content-width: 90rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,6 +47,11 @@
   --color-text: #e6e6e3;
   --color-prominent: #fafaf8;
   --color-attention: #e8574a;
+}
+
+.content-wrapper {
+  max-width: var(--max-content-width);
+  margin-inline: auto;
 }
 
 body {

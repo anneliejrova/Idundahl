@@ -1,0 +1,9 @@
+.grid-wrapper {
+  container-type: inline-size;
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-md);
+  padding:var(--space-md)
+}

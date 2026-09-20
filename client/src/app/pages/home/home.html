@@ -1,2 +1,7 @@
+<app-hero [allSeries]="allSeries()" />
 
-<app-hero />
+<app-grid>
+  @for (series of allSeries(); track series.id) {
+    <app-series-card [series]="series" />
+  }
+</app-grid>
