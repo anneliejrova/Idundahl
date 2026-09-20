@@ -28,6 +28,10 @@ export class ThemedImage {
       this.failedDark.set(true);
       return;
     }
-    this.failedBase.set(true);
+    if (!this.failedBase()) {
+      this.failedBase.set(true);
+      this.failedDark.set(false);
+      return;
+    }
   }
 }

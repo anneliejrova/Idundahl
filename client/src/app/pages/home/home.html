@@ -5,3 +5,9 @@
     <app-series-card [series]="series" />
   }
 </app-grid>
+
+<app-grid>
+  @for (product of featuredProducts(); track product.id) {
+    <app-product-card [product]="product" />
+  }
+</app-grid>

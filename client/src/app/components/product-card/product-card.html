@@ -1,0 +1,19 @@
+<article class="product-card">
+  <app-themed-image
+    [baseUrl]="mainImageUrl()"
+    [fallbackUrl]="fallbackUrl()"
+    [alt]="product().name"
+  />
+  <div class="product-card-content">
+    <h3>{{ product().name }}</h3>
+    <p class="product-card-price">{{ product().price }} kr</p>
+    @if (product().stock_quantity > 0) {
+      <p>{{ product().stock_quantity }} i lager</p>
+    } @else {
+      <p class="product-card-out-of-stock">Slut i lager</p>
+    }
+    <a [routerLink]="['/products', product().slug]" class="product-card-link">
+      Visa produkt
+    </a>
+  </div>
+</article>

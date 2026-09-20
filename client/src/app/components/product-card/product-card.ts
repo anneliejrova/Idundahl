@@ -1,0 +1,26 @@
+import { Component, input, computed } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ThemedImage } from '../themed-image/themed-image';
+import type { ProductCardData } from '../../models/product.model';
+
+@Component({
+  selector: 'app-product-card',
+  imports: [RouterLink, ThemedImage],
+  templateUrl: './product-card.html',
+  styleUrl: './product-card.css',
+})
+export class ProductCard {
+  product = input.required<ProductCardData>();
+
+  mainImageUrl = computed(() => {
+    const image = this.product().product_image.find((img) => img.is_main);
+    return image?.image_url ?? null;
+  });
+
+  fallbackUrl = computed(() => {
+    const slug = this.product().series_product_type.product_type.shape?.slug;
+    return slug
+      ? `https://fnnyyflzqqvqwanjmnht.supabase.co/storage/v1/object/public/images/shapes/${slug}`
+      : 'https://fnnyyflzqqvqwanjmnht.supabase.co/storage/v1/object/public/images/shapes/serie';
+  });
+}

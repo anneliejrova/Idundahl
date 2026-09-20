@@ -4,14 +4,19 @@ import { Hero } from '../../components/hero/hero';
 import { SeriesCard } from '../../components/series-card/series-card';
 import { Grid } from '../../components/grid/grid';
 import { SeriesService } from '../../services/series.service';
+import { ProductService } from '../../services/product.service';
+import { ProductCard } from '../../components/product-card/product-card';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, SeriesCard, Grid],
+  imports: [Hero, SeriesCard, Grid, ProductCard],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home {
   private seriesService = inject(SeriesService);
+  private productService = inject(ProductService);
+
   allSeries = toSignal(this.seriesService.getAll(), { initialValue: [] });
-}
+  featuredProducts = toSignal(this.productService.getFeatured(), { initialValue: [] }); 
+} 
