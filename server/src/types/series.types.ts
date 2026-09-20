@@ -13,12 +13,17 @@ export interface SeriesVariantWithBadge extends SeriesVariant {
   isNew: boolean;
 }
 
+export interface Shape {
+  slug: string;
+}
+
 export interface Series {
   id: string;
   name: string;
   slug: string;
   description: string | null;
   mood_image_url: string | null; 
+  shape: Shape | null;
   designer: Pick<Credit, "id" | "name"> | null;
   collaborator: Pick<Credit, "id" | "name"> | null;
   series_variant: SeriesVariantWithBadge[];

@@ -8,41 +8,44 @@ export const seriesRouter = Router();
 // Get all series with their main variant
 
 seriesRouter.get("/", async (req, res, next) => {
-  const { data, error } = await supabase
-    .from("series")
-    .select(`
-      id,
-      name,
-      slug,
-      description,
-      mood_image_url,
-      designer:credit!series_designer_id_fkey ( id, name ),
-      collaborator:credit!series_collaborator_id_fkey ( id, name ),
-      series_variant!inner ( image_url )
-    `,)
-    .eq("series_variant.is_main", true);
-
-  if (error) {
-    return next(error);
-  }
-
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-  const { data: recentProducts, error: recentError } = await supabase
-    .from("product")
-    .select("series_variant:series_variant_id ( series_id )")
-    .gte("published_at", sevenDaysAgo.toISOString());
+  const [seriesResult, recentProductsResult] = await Promise.all([
+    supabase
+      .from("series")
+      .select(
+        `
+        id,
+        name,
+        slug,
+        description,
+        mood_image_url,
+        shape:shape_id ( slug ),
+        designer:credit!series_designer_id_fkey ( id, name ),
+        collaborator:credit!series_collaborator_id_fkey ( id, name ),
+        series_variant!inner ( image_url )
+      `,
+      )
+      .eq("series_variant.is_main", true),
+    supabase
+      .from("product")
+      .select("series_variant:series_variant_id ( series_id )")
+      .gte("published_at", sevenDaysAgo.toISOString()),
+  ]);
 
-  if (recentError) {
-    return next(recentError);
+  if (seriesResult.error) {
+    return next(seriesResult.error);
+  }
+  if (recentProductsResult.error) {
+    return next(recentProductsResult.error);
   }
 
   const seriesWithNewProducts = new Set(
-    recentProducts.map((p: any) => p.series_variant.series_id),
+    recentProductsResult.data.map((p: any) => p.series_variant.series_id),
   );
 
-  const seriesWithBadge = data.map((s) => ({
+  const seriesWithBadge = seriesResult.data.map((s) => ({
     ...s,
     isNew: seriesWithNewProducts.has(s.id),
   }));
@@ -96,40 +99,46 @@ seriesRouter.get("/:slug", async (req, res, next) => {
 
   const variantIds = data.series_variant.map((v: SeriesVariant) => v.id);
 
-  const { data: recentProducts, error: recentError } = await supabase
-    .from("product")
-    .select("series_variant_id")
-    .in("series_variant_id", variantIds)
-    .gte("published_at", sevenDaysAgo.toISOString());
+  const [recentProductsResult, productsResult] = await Promise.all([
+    supabase
+      .from("product")
+      .select("series_variant_id")
+      .in("series_variant_id", variantIds)
+      .gte("published_at", sevenDaysAgo.toISOString()),
+    supabase
+      .from("product")
+      .select("*")
+      .eq("series_variant_id", mainVariant.id),
+  ]);
 
-  if (recentError) {
-    return next(recentError);
+  if (recentProductsResult.error) {
+    return next(recentProductsResult.error);
+  }
+  if (productsResult.error) {
+    return next(productsResult.error);
   }
 
   const variantsWithNew = new Set(
-    recentProducts.map((p: any) => p.series_variant_id),
+    recentProductsResult.data.map((p: any) => p.series_variant_id),
   );
 
-  const seriesVariantWithBadge = data.series_variant.map((v: SeriesVariant) => ({
-    ...v,
-    isNew: variantsWithNew.has(v.id),
-  }));
+  const seriesVariantWithBadge = data.series_variant.map(
+    (v: SeriesVariant) => ({
+      ...v,
+      isNew: variantsWithNew.has(v.id),
+    }),
+  );
 
-  const { data: products, error: productsError } = await supabase
-    .from("product")
-    .select("*")
-    .eq("series_variant_id", mainVariant.id);
-
-  if (productsError) {
-    return next(productsError);
-  }
-
-  const mainVariantProducts = products.map((p) => ({
+  const mainVariantProducts = productsResult.data.map((p) => ({
     ...p,
     isNew: isNew(p.published_at),
   }));
 
-  res.json({ ...data, series_variant: seriesVariantWithBadge, mainVariantProducts });
+  res.json({
+    ...data,
+    series_variant: seriesVariantWithBadge,
+    mainVariantProducts,
+  });
 });
 
 // Get product types for a specific series by series slug
@@ -208,10 +217,9 @@ seriesRouter.get("/:slug/:variantSlug", async (req, res, next) => {
   }
 
   const productsWithBadge = products.map((p) => ({
-  ...p,
-  isNew: isNew(p.published_at),
-}));
+    ...p,
+    isNew: isNew(p.published_at),
+  }));
 
   res.json(productsWithBadge);
 });
-
