@@ -13,7 +13,9 @@ export const productRouter = Router();
 productRouter.get("/featured", async (req, res, next) => {
   const { data, error } = await supabase
     .from("product")
-    .select("*, product_image ( image_url, is_main ), series_product_type:series_product_type_id ( product_type:product_type_id ( shape:shape_id ( slug ) ) )")
+    .select(
+      "*, product_image ( image_url, is_main ), series_product_type:series_product_type_id ( product_type:product_type_id ( name, shape:shape_id ( slug ) ) ), series_variant:series_variant_id ( name, series:series_id ( name, slug ) )",
+    )
     .in("slug", [
       "geometria-white-mugg",
       "geometria-grey-pastaskal",
@@ -71,7 +73,6 @@ productRouter.get("/", async (req, res, next) => {
   res.json(data);
 });
 
-
 // Search for products by name
 productRouter.get("/search", async (req, res, next) => {
   const { q } = req.query;
@@ -84,7 +85,9 @@ productRouter.get("/search", async (req, res, next) => {
 
   const { data, error } = await supabase
     .from("product")
-    .select("*, product_image ( image_url, is_main ), series_product_type:series_product_type_id ( product_type:product_type_id ( shape:shape_id ( slug ) ) )")
+    .select(
+      "*, product_image ( image_url, is_main ), series_product_type:series_product_type_id ( product_type:product_type_id ( name, shape:shape_id ( slug ) ) ), series_variant:series_variant_id ( name, series:series_id ( name, slug ) )",
+    )
     .ilike("name", `%${q}%`)
     .limit(50);
 
@@ -100,7 +103,6 @@ productRouter.get("/search", async (req, res, next) => {
   res.json({ count: productsWithBadge.length, results: productsWithBadge });
 });
 
-
 // Get a specific product by slug, including its series variant and product type
 productRouter.get("/:slug", async (req, res, next) => {
   const { slug } = req.params;
@@ -113,7 +115,7 @@ productRouter.get("/:slug", async (req, res, next) => {
         series_variant:series_variant_id!inner 
             ( id, name, slug, image_url, is_main ),
         series_product_type:series_product_type_id!inner 
-            (id, product_type:product_type_id!inner ( id, name, slug, shape:shape_id ( slug) )),
+            (id, product_type:product_type_id!inner ( id, name, slug, shape:shape_id ( slug ) )),
         product_image ( id, image_url, alt_text, is_main ),
         sku,
         ean,
@@ -146,8 +148,8 @@ productRouter.get("/:slug", async (req, res, next) => {
   const { data: similarProducts, error: similarError } = await supabase
     .from("product")
     .select(
-        "id, name, slug, price, published_at, product_image ( image_url, is_main ), series_product_type:series_product_type_id ( product_type:product_type_id ( shape:shape_id ( slug ) ) )",
-        )
+      "id, name, slug, price, published_at, product_image ( image_url, is_main ), series_product_type:series_product_type_id ( product_type:product_type_id ( shape:shape_id ( slug ) ) )",
+    )
     .eq("series_variant_id", (data.series_variant as any).id)
     .neq("id", data.id)
     .limit(5);
@@ -263,4 +265,3 @@ productRouter.post("/", async (req, res, next) => {
     return next(err);
   }
 });
-

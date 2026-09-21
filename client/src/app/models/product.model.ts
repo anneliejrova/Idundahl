@@ -53,11 +53,27 @@ export interface SeriesProductTypeShapeOnly {
   product_type: { shape: Shape | null };
 }
 
+export interface SeriesProductTypeCardData {
+  product_type: {
+    name: string;
+    shape: Shape | null;
+  };
+}
+
 export interface ProductImage {
   id: string;
   image_url: string;
   alt_text: string | null;
   is_main: boolean;
+}
+
+export interface ProductCardData extends ProductWithBadge {
+  product_image: Pick<ProductImage, 'image_url' | 'is_main'>[];
+  series_product_type: SeriesProductTypeCardData;
+  series_variant: {
+    name: string;
+    series: { name: string; slug: string };
+  };
 }
 
 export interface SimilarProduct {
@@ -110,9 +126,4 @@ export interface CreateProductInput {
   ean?: string;
   description?: string;
   image_url?: string;
-}
-
-export interface ProductCardData extends ProductWithBadge {
-  product_image: Pick<ProductImage, 'image_url' | 'is_main'>[];
-  series_product_type: SeriesProductTypeShapeOnly;
 }

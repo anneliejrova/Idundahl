@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { Wordmark } from '../wordmark/wordmark';
+
 
 @Component({
-  imports: [],
+  imports: [Wordmark],
   selector: 'app-footer',
   styleUrl: './footer.css',
   templateUrl: './footer.html',

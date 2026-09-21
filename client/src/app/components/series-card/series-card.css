@@ -1,22 +1,46 @@
-.series-card {
-  display: block;
+:host {
+  display: flex;
+  height: 100%;
 }
 
-.series-card-image {
-  display: block;
+.series-card {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: auto;
+  min-height: 0;
+}
+
+app-themed-image {
+  display: block;
 }
 
 .series-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: var(--space-xs);
   padding: var(--space-sm) 0;
+}
+
+.series-card-text {
+  flex: 1;
+  min-height: 0;
 }
 
 .series-card-designer {
   color: var(--color-text);
 }
 
+.series-card-collaborator {
+  color: var(--color-text);
+  font-style: italic;
+}
+
 .series-card-link {
+  align-self: flex-end;
+  font-size: 0.8rem;
   color: var(--color-prominent);
   text-decoration: underline;
+  padding: var(--space-md);
 }

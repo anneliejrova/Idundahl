@@ -1,0 +1,16 @@
+header {
+  padding: var(--space-md);
+}
+
+.logo-link {
+  display: flex;
+  align-items: end;
+  gap: var(--space-xs);
+  font-size: clamp(1.25rem, 1rem + 1vw, 2rem);
+
+  app-themed-image {
+    display: block;
+    --themed-image-width: auto;
+    --themed-image-height: 1.6em;
+  }
+}

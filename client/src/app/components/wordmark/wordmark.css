@@ -1,0 +1,9 @@
+.wordmark {
+  font-family: 'GFS Didot', serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-wordmark);
+  font-size: 1em;
+  line-height: 1;
+  margin:0;
+}

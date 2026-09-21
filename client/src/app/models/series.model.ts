@@ -12,7 +12,7 @@ export interface SeriesVariant {
   isNew: boolean;
 }
 
-export interface Series {
+export interface SeriesModel {
   id: string;
   name: string;
   slug: string;

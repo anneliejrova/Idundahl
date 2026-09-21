@@ -42,3 +42,13 @@ GET http://localhost:8000/api/series/busfro/product-types
 
 ### Helt felstavad väg (ingen route matchar alls) -> catch-all 404
 GET http://localhost:8000/api/lovika/red
+
+
+### Alla serier, ofiltrerat -> ska fungera som innan
+GET http://localhost:8000/api/series
+
+### Filtrerat på kategori "coffee" -> ska ge en smalare lista
+GET http://localhost:8000/api/series?category=coffee
+
+### Filtrerat på en kategori som inte finns -> ska ge tom lista, inte krascha
+GET http://localhost:8000/api/series?category=nonexistent

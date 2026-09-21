@@ -1,0 +1,22 @@
+<section class="spots-section">
+  <h2>Kategorier</h2>
+<div class="spots-grid">
+  @for (spot of spots; track spot.categorySlug) {
+    <a
+      class="spot"
+      [routerLink]="['/category', spot.categorySlug]"
+    >
+      <div class="spot-image-wrapper">
+        <img
+          [src]="imageUrl(spot.imageSlug)"
+          [alt]="spot.title"
+        />
+
+        <div class="spot-content">
+          <h2>{{ spot.title }}</h2>
+        </div>
+      </div>
+    </a>
+  }
+</div>
+</section>

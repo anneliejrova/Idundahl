@@ -1,13 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import type { Series } from '../models/series.model';
+import type { SeriesModel } from '../models/series.model';
 
 @Injectable({ providedIn: 'root' })
 export class SeriesService {
   private http = inject(HttpClient);
 
-  getAll(): Observable<Series[]> {
-    return this.http.get<Series[]>('/api/series');
+  getAll(): Observable<SeriesModel[]> {
+    return this.http.get<SeriesModel[]>('/api/series');
+  }
+
+  getByCategory(categorySlug: string): Observable<SeriesModel[]> {
+    return this.http.get<SeriesModel[]>(`/api/series?category=${categorySlug}`);
   }
 }

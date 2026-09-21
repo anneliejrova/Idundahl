@@ -1,6 +1,6 @@
 import { Component, input, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import type { Series } from '../../models/series.model';
+import { SeriesModel } from '../../models/series.model';
 
 @Component({
   selector: 'app-hero',
@@ -9,7 +9,7 @@ import type { Series } from '../../models/series.model';
   styleUrl: './hero.css',
 })
 export class Hero {
-  allSeries = input.required<Series[]>();
+  allSeries = input.required<SeriesModel[]>();
 
   heroSeries = computed(() => {
     const withMood = this.allSeries().filter((s) => s.mood_image_url !== null);

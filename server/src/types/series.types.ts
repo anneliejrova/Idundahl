@@ -29,3 +29,17 @@ export interface Series {
   series_variant: SeriesVariantWithBadge[];
   mainVariantProducts: ProductWithBadge[];
 }
+
+export interface SeriesListRow {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  mood_image_url: string | null;
+  shape: { slug: string } | null;
+  designer: { id: string; name: string } | null;
+  collaborator: { id: string; name: string } | null;
+  series_variant: { image_url: string | null }[];
+}
+
+export type SeriesQueryResult = Promise<{ data: SeriesListRow[]; error: any }>;

@@ -1,0 +1,55 @@
+footer {
+  display: grid;
+  padding: var(--space-lg);
+  grid-template-columns: 2fr 1fr;
+  grid-template-areas:
+    "brand copy"
+    "contact copy";
+
+  @media (min-width: 640px) {
+    grid-template-columns: 1fr 2fr 2fr;
+    grid-template-areas: 
+      "brand contact copy";
+  }
+}
+
+.brand {
+  grid-area: brand;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  grid-area: contact; 
+  text-align: start;
+  
+  
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    gap: var(--space-lg); 
+  }
+
+  .post,
+  .links {
+    display: flex;
+    flex-direction: column;
+    margin-right: var(--space-sm);
+    font-size: small;
+
+    p {
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+
+    a {
+      display: inline;
+    }
+  }
+}
+
+.copy {
+  grid-area: copy;
+  font-size: x-small;
+  text-align: end;
+  align-self: end;
+}

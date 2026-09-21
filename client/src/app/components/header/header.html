@@ -1,18 +1,23 @@
 <header>
-  <a routerLink="/" class="logo">Idundahl</a>
-
+  
+<a routerLink="/" class="logo-link">
+  <app-themed-image
+    [baseUrl]="logoUrl"
+    [fallbackUrl]="logoUrl"
+    alt="Idundahl logotyp"
+  />
+  <app-wordmark />
+</a>
   <!---<form (submit)="onSearch($event)">
     <input type="search" name="q" placeholder="Sök..." />
-  </form> --->
+  </form> 
 
   <nav>
     <a routerLink="/">Start</a>
     <a routerLink="/search">Sök</a>
-    <a routerLink="/series/lovika">Serie</a>
-    <a routerLink="/admin/products">Admin lista</a>
-    <a routerLink="/admin/products/new">Admin ny</a>
-    <a routerLink="/basket">Varukorg</a>
+    <a routerLink="/series">Serie</a>
     <a href="#" aria-label="Gillade">♡</a>
     <a routerLink="/basket" aria-label="Varukorg">🛒</a>
-  </nav>
+    <a routerLink="/admin">Admin</a>
+  </nav>--->
 </header>

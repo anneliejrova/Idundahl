@@ -2,17 +2,37 @@ import { Router } from "express";
 import { supabase } from "../config/supabaseClient.js";
 import type { SeriesVariant } from "../types/series.types.js";
 import { isNew } from "../utils/isNew.js";
+import type { SeriesListRow, SeriesQueryResult } from "../types/series.types.js";
 
 export const seriesRouter = Router();
 
 // Get all series with their main variant
 
 seriesRouter.get("/", async (req, res, next) => {
+  const { category } = req.query;
+
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-  const [seriesResult, recentProductsResult] = await Promise.all([
-    supabase
+  let seriesQuery = supabase
+    .from("series")
+    .select(
+      `
+      id,
+      name,
+      slug,
+      description,
+      mood_image_url,
+      shape:shape_id ( slug ),
+      designer:credit!series_designer_id_fkey ( id, name ),
+      collaborator:credit!series_collaborator_id_fkey ( id, name ),
+      series_variant!inner ( image_url )
+    `,
+    )
+    .eq("series_variant.is_main", true) as unknown as SeriesQueryResult;
+
+  if (typeof category === "string") {
+    seriesQuery = supabase
       .from("series")
       .select(
         `
@@ -24,10 +44,16 @@ seriesRouter.get("/", async (req, res, next) => {
         shape:shape_id ( slug ),
         designer:credit!series_designer_id_fkey ( id, name ),
         collaborator:credit!series_collaborator_id_fkey ( id, name ),
-        series_variant!inner ( image_url )
+        series_variant!inner ( image_url ),
+        series_category!inner ( category!inner ( slug ) )
       `,
       )
-      .eq("series_variant.is_main", true),
+      .eq("series_variant.is_main", true)
+      .eq("series_category.category.slug", category) as unknown as SeriesQueryResult;
+  }
+
+  const [seriesResult, recentProductsResult] = await Promise.all([
+    seriesQuery,
     supabase
       .from("product")
       .select("series_variant:series_variant_id ( series_id )")

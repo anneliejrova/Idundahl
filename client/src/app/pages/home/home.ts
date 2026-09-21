@@ -6,10 +6,11 @@ import { Grid } from '../../components/grid/grid';
 import { SeriesService } from '../../services/series.service';
 import { ProductService } from '../../services/product.service';
 import { ProductCard } from '../../components/product-card/product-card';
+import { Spots } from '../../components/spots/spots';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, SeriesCard, Grid, ProductCard],
+  imports: [Hero, SeriesCard, Grid, ProductCard, Spots],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

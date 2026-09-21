@@ -6,11 +6,14 @@
   />
   <div class="series-card-content">
     <h3>{{ series().name }}</h3>
-    @if (series().designer) {
+     @if (series().designer) {
       <p class="series-card-designer">Design av {{ series().designer!.name }}</p>
     }
-    <a [routerLink]="['/series', series().slug]" class="series-card-link">
+    @if (series().collaborator) {
+      <p class="series-card-collaborator">I samarbete med {{ series().collaborator!.name }}</p>
+    }
+  </div>
+   <a [routerLink]="['/series', series().slug]" class="series-card-link">
       Se övriga serien →
     </a>
-  </div>
 </article>

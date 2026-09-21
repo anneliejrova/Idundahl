@@ -1,19 +1,45 @@
 <article class="product-card">
-  <app-themed-image
-    [baseUrl]="mainImageUrl()"
-    [fallbackUrl]="fallbackUrl()"
-    [alt]="product().name"
-  />
+  <div class="product-card-image-wrapper">
+    <app-themed-image
+      [baseUrl]="mainImageUrl()"
+      [fallbackUrl]="fallbackUrl()"
+      [alt]="product().name"
+    />
+    <button
+      type="button"
+      class="heart-button"
+      [class.is-active]="isLiked()"
+      [attr.aria-pressed]="isLiked()"
+      aria-label="Gilla"
+      (click)="toggleLike()"
+    >
+      {{ isLiked() ? '♥' : '♡' }}
+    </button>
+  </div>
   <div class="product-card-content">
-    <h3>{{ product().name }}</h3>
-    <p class="product-card-price">{{ product().price }} kr</p>
-    @if (product().stock_quantity > 0) {
-      <p>{{ product().stock_quantity }} i lager</p>
-    } @else {
-      <p class="product-card-out-of-stock">Slut i lager</p>
-    }
-    <a [routerLink]="['/products', product().slug]" class="product-card-link">
-      Visa produkt
-    </a>
+    <div class="product-card-text">
+      <h3 class="product-card-name">{{ product().series_product_type.product_type.name }}</h3>
+      <p class="product-card-series">
+        {{ product().series_variant.series.name }}
+        ({{ product().series_variant.name }})
+      </p>
+      @if (product().stock_quantity > 0) {
+        <p>{{ product().stock_quantity }} i lager</p>
+      } @else {
+        <p class="product-card-out-of-stock">Slut i lager</p>
+      }
+    </div>
+    <div class="product-card-actions">
+      <a [routerLink]="['/products', product().slug]" class="product-card-link">
+        Visa produkt
+      </a>
+      <a [routerLink]="['/series', product().series_variant.series.slug]" class="product-card-series-link">
+        Se övriga serien →
+      </a>
+      <div class="product-card-purchase-row">
+        <p class="product-card-price">{{ product().price }} kr</p>
+        <button type="button" class="product-card-buy">Köp</button>
+      </div>
+    </div>
   </div>
 </article>
