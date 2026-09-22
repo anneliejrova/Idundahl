@@ -1,0 +1,13 @@
+.trust-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-text);
+  padding-left: var(--space-md);
+}
+
+.trust-badge svg {
+  width: 1.5em;
+  height: 1.5em;
+  flex-shrink: 0;
+}

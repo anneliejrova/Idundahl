@@ -1,23 +1,43 @@
 <header>
-  
-<a routerLink="/" class="logo-link">
-  <app-themed-image
-    [baseUrl]="logoUrl"
-    [fallbackUrl]="logoUrl"
-    alt="Idundahl logotyp"
-  />
-  <app-wordmark />
-</a>
-  <!---<form (submit)="onSearch($event)">
-    <input type="search" name="q" placeholder="Sök..." />
-  </form> 
+  <div class="header-up">
+    <div class="logo">
+      <a routerLink="/" class="logo-link">
+        <app-themed-image [baseUrl]="logoUrl" [fallbackUrl]="logoUrl" alt="Idundahl logotyp" />
+        <app-wordmark />
+      </a>
+    </div>
+
+
+    <div class="find-save">
+      <div class="search">
+        <form (submit)="onSearch($event)">
+          <input type="search" name="q" placeholder="Sök..." />
+        </form>
+      </div>
+      <div class="icon-links">
+        <a href="#" aria-label="Gillade" class="icon-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path
+              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </a>
+        <a routerLink="/basket" aria-label="Varukorg" class="icon-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 7h16l-1.5 11a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7L4 7z" />
+            <path d="M8 7V5a4 4 0 0 1 8 0v2" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
 
   <nav>
     <a routerLink="/">Start</a>
-    <a routerLink="/search">Sök</a>
-    <a routerLink="/series">Serie</a>
-    <a href="#" aria-label="Gillade">♡</a>
-    <a routerLink="/basket" aria-label="Varukorg">🛒</a>
+    <a routerLink="/series">Våra Serier</a>
+    <a routerLink="#">Rea</a>
     <a routerLink="/admin">Admin</a>
-  </nav>--->
+  </nav>
+
+
 </header>

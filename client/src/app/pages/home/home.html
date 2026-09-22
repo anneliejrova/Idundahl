@@ -4,8 +4,8 @@
   <app-spots />
 
 
-<section class="rekomenderade-section">
-<h2>Rekomenderade produkter</h2>
+<section class="recommended-section">
+<h2>Populära produkter</h2>
 <app-grid>
   @for (product of featuredProducts(); track product.id) {
   <app-product-card [product]="product" />
@@ -13,11 +13,3 @@
 </app-grid>
 </section>
 
-<section class="serier-section">
-<h2>Våra serier</h2>
-<app-grid>
-  @for (series of allSeries(); track series.id) {
-  <app-series-card [series]="series" />
-  }
-</app-grid>
-</section>

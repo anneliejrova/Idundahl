@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Wordmark } from '../wordmark/wordmark';
 import { ThemedImage } from '../themed-image/themed-image';
 
@@ -9,7 +9,16 @@ import { ThemedImage } from '../themed-image/themed-image';
   styleUrl: './header.css',
   templateUrl: './header.html',
 })
-
 export class Header {
   logoUrl = 'https://fnnyyflzqqvqwanjmnht.supabase.co/storage/v1/object/public/images/brand/logo';
+
+  constructor(private router: Router) {}
+
+  onSearch(event: Event) {
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    const query = (form.elements.namedItem('q') as HTMLInputElement).value;
+    if (query.trim().length < 2) return;
+    this.router.navigate(['/search'], { queryParams: { q: query } });
+  }
 }

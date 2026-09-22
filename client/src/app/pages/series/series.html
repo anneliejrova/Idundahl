@@ -1,1 +1,8 @@
-<p>series works!</p>
+<section class="series-section">
+<h2>Våra Serier</h2>
+<app-grid>
+  @for (series of allSeries(); track series.id) {
+  <app-series-card [series]="series" />
+  }
+</app-grid>
+</section>

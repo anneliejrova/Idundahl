@@ -1,0 +1,8 @@
+<section class="search-section">
+  <p class="search-count">{{ result().count }} träffar</p>
+  <app-grid>
+    @for (product of result().results; track product.id) {
+      <app-product-card [product]="product" />
+    }
+  </app-grid>
+</section>

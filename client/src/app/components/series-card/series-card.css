@@ -8,10 +8,10 @@
   flex-direction: column;
   width: 100%;
   min-height: 0;
-}
 
-app-themed-image {
-  display: block;
+  app-themed-image {
+    display: block;
+  }
 }
 
 .series-card-content {

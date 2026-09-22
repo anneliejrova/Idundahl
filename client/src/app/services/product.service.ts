@@ -9,4 +9,10 @@ export class ProductService {
   getFeatured() {
     return this.http.get<ProductCardData[]>('/api/products/featured');
   }
+
+  search(query: string) {
+  return this.http.get<{ count: number; results: ProductCardData[] }>(
+    `/api/products/search?q=${encodeURIComponent(query)}`
+  );
+}
 }
