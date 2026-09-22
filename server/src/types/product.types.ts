@@ -111,3 +111,25 @@ export interface CreateProductInput {
   description?: string;
   image_url?: string;
 }
+
+export interface AdminProductRow {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  sku: string;
+  size_label: string;
+  diameter_mm: number | null;
+  height_mm: number | null;
+  width_mm: number | null;
+  length_mm: number | null;
+  volume_ml: number | null;
+  price: number;
+  currency: string;
+  stock_quantity: number;
+  published_at: string | null;
+  series_variant: {
+    name: string;
+    series: { id: string; name: string; slug: string };
+  };
+}

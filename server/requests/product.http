@@ -7,6 +7,9 @@ GET http://localhost:8000/api/products/featured
 ### Sök 
 GET http://localhost:8000/api/products/search?q=mugg
 
+### 
+GET http://localhost:8000/api/products/
+
 # OBS! Vid POST!
 # Kom ihåg att köra sql raddering mellan varje test som lyckas
 # DELETE FROM product WHERE slug = 'lovika-white-kakfat';

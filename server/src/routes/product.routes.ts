@@ -49,15 +49,26 @@ productRouter.get("/", async (req, res, next) => {
       `
         id,
         name,
+        slug,
+        description,
         sku,
+        size_label,
+        diameter_mm,
+        height_mm,
+        width_mm,
+        length_mm,
+        volume_ml,
         price,
+        currency,
+        stock_quantity,
+        published_at,
         series_variant:series_variant_id!inner (
           name,
           series:series_id!inner ( id, name, slug )
         )
       `,
     )
-    .order("series(name)", { ascending: true })
+    .order("name", { ascending: true, foreignTable: "series_variant.series" })
     .order("name", { ascending: true });
 
   if (typeof series === "string") {
@@ -261,6 +272,38 @@ productRouter.post("/", async (req, res, next) => {
     }
 
     res.status(201).json(newProduct);
+  } catch (err) {
+    return next(err);
+  }
+});
+
+productRouter.delete("/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const { error: imageError } = await supabase
+      .from("product_image")
+      .delete()
+      .eq("product_id", id);
+
+    if (imageError) {
+      throw imageError;
+    }
+
+    const { error: productError, count } = await supabase
+      .from("product")
+      .delete({ count: "exact" })
+      .eq("id", id);
+
+    if (productError) {
+      throw productError;
+    }
+
+    if (count === 0) {
+      return res.status(404).json({ error: "Produkten hittades inte." });
+    }
+
+    res.status(204).send();
   } catch (err) {
     return next(err);
   }
