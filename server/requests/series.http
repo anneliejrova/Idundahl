@@ -52,3 +52,6 @@ GET http://localhost:8000/api/series?category=coffee
 
 ### Filtrerat på en kategori som inte finns -> ska ge tom lista, inte krascha
 GET http://localhost:8000/api/series?category=nonexistent
+
+### 
+Get http://localhost:8000/api/series/lovika/product-types

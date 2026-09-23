@@ -1,0 +1,104 @@
+.product-form-page {
+  container-type: inline-size;
+  padding: var(--space-md);
+}
+
+h1{
+    padding-bottom: var(--space-sm);
+}
+
+.product-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--space-lg);
+  max-width: clamp(500px, 90cqw, 900px);
+  margin-inline: auto;
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border-radius: 8px;
+
+  .details,
+  .measures {
+    flex: 1 1 280px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    font-size: clamp(0.9rem, 0.85rem + 0.2vw, 1rem);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: var(--space-sm);
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
+    font-family: inherit;
+    border: 1px solid var(--color-accent-2);
+    border-radius: 4px;
+  }
+
+  textarea {
+    min-height: 6rem;
+    resize: vertical;
+  }
+
+  .autocomplete {
+    position: relative;
+
+    .suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background: var(--color-bg);
+      border: 1px solid var(--color-accent-2);
+      border-radius: 4px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-height: 12rem;
+      overflow-y: auto;
+
+      button {
+        display: block;
+        width: 100%;
+        padding: var(--space-xs) var(--space-sm);
+        text-align: left;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: inherit;
+        color: inherit;
+
+        &:hover {
+          background: var(--color-accent-1);
+        }
+      }
+    }
+  }
+
+  button[type='submit'] {
+    align-self: center;
+    margin-block-start: auto;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-prominent);
+    color: var(--color-bg);
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .field-warning {
+    color: var(--color-attention);
+    font-size: 0.85rem;
+  }
+}

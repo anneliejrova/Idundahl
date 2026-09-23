@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ThemedImage } from '../themed-image/themed-image';
 
 interface Spot {
   categorySlug: string;
@@ -10,7 +9,7 @@ interface Spot {
 
 @Component({
   selector: 'app-spots',
-  imports: [RouterLink, ThemedImage],
+  imports: [RouterLink],
   templateUrl: './spots.html',
   styleUrl: './spots.css',
 })
@@ -23,6 +22,6 @@ export class Spots {
   ];
 
   imageUrl(slug: string): string {
-  return `https://fnnyyflzqqvqwanjmnht.supabase.co/storage/v1/object/public/images/category/${slug}.webp`;
-}
+    return `https://fnnyyflzqqvqwanjmnht.supabase.co/storage/v1/object/public/images/category/${slug}.webp`;
+  }
 }

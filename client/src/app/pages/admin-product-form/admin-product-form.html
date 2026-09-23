@@ -1,1 +1,169 @@
-<p>admin-product-form works!</p>
+<section class="product-form-page">
+    <h1>Ny produkt</h1>
+    <form class="product-form" (submit)="onSubmit($event)">
+        <div class="details">
+            <label>
+                Serie
+                <div class="autocomplete">
+                    <input type="text" [value]="seriesInput()" (input)="onSeriesInput($any($event.target).value)"
+                        (focus)="showSuggestions.set(true)" (blur)="showSuggestions.set(false)"
+                        (keydown.enter)="onSeriesFieldEnter($event)" placeholder="Skriv för att söka..."
+                        autocomplete="off" />
+                    @if (showSuggestions() && suggestions().length > 0) {
+                    <ul class="suggestions">
+                        @for (series of suggestions(); track series.id) {
+                        <li>
+                            <button type="button" (mousedown)="selectSeries(series)">
+                                {{ series.name }}
+                            </button>
+                        </li>
+                        }
+                    </ul>
+                    }
+                </div>
+            </label>
+
+            <label>
+                Variant
+                @if (isVariantLocked()) {
+                <input type="text" [value]="selectedVariant()?.name" disabled />
+                } @else {
+                <select [disabled]="!selectedSeries()" (change)="onVariantChange($any($event.target).value)">
+                    <option value="">Välj variant...</option>
+                    @for (v of availableVariants(); track v.id) {
+                    <option [value]="v.id">{{ v.name }}</option>
+                    }
+                </select>
+                }
+            </label>
+
+            <label>
+                Produkttyp
+                <div class="autocomplete">
+                    <input type="text" [value]="productTypeInput()"
+                        (input)="onProductTypeInput($any($event.target).value)"
+                        (focus)="showProductTypeSuggestions.set(true)" (blur)="showProductTypeSuggestions.set(false)"
+                        [placeholder]="selectedSeries() ? 'Skriv för att söka...' : 'Du måste välja serie först'"
+                        [disabled]="!selectedSeries()" autocomplete="off" />
+                    @if (showProductTypeSuggestions() && productTypeSuggestions().length > 0) {
+                    <ul class="suggestions">
+                        @for (pt of productTypeSuggestions(); track pt.id) {
+                        <li>
+                            <button type="button" (mousedown)="selectProductType(pt)">
+                                {{ pt.name }}
+                            </button>
+                        </li>
+                        }
+                    </ul>
+                    }
+                </div>
+            </label>
+
+            <label>
+                Namn
+                <input type="text" [value]="generatedName()" disabled />
+            </label>
+
+            <label>
+                Pris (kr) *
+                <input type="number" [formField]="productForm.price" />
+                @if (productForm.price().touched() && productForm.price().invalid()) {
+                @for (error of productForm.price().errors(); track error) {
+                <p class="field-warning">{{ error.message }}</p>
+                }
+                }
+            </label>
+
+            <label>
+                Lagersaldo *
+                <input type="number" [formField]="productForm.stock_quantity" />
+                @if (productForm.stock_quantity().touched() && productForm.stock_quantity().invalid()) {
+                @for (error of productForm.stock_quantity().errors(); track error) {
+                <p class="field-warning">{{ error.message }}</p>
+                }
+                }
+            </label>
+
+            <label>
+                EAN
+                <input type="text" [formField]="productForm.ean" />
+            </label>
+
+            <label>
+                Beskrivning
+                <textarea [formField]="productForm.description"></textarea>
+            </label>
+
+            <label>
+                Bild-URL
+                <input type="text" [formField]="productForm.image_url" />
+            </label>
+
+        </div>
+        <div class="measures">
+            <label>
+                Diameter (mm)
+                <input type="text" [formField]="productForm.diameter_mm" />
+                @if (productForm.diameter_mm().touched() && productForm.diameter_mm().invalid()) {
+                @for (error of productForm.diameter_mm().errors(); track error) {
+                <p class="field-warning">{{ error.message }}</p>
+                }
+                }
+            </label>
+
+            <label>
+                Höjd (mm)
+                <input type="text" [formField]="productForm.height_mm" />
+                @if (productForm.height_mm().touched() && productForm.height_mm().invalid()) {
+                @for (error of productForm.height_mm().errors(); track error) {
+                <p class="field-warning">{{ error.message }}</p>
+                }
+                }
+            </label>
+
+            <label>
+                Bredd (mm)
+                <input type="text" [formField]="productForm.width_mm" />
+                @if (productForm.width_mm().touched() && productForm.width_mm().invalid()) {
+                @for (error of productForm.width_mm().errors(); track error) {
+                <p class="field-warning">{{ error.message }}</p>
+                }
+                }
+            </label>
+
+            <label>
+                Längd (mm)
+                <input type="text" [formField]="productForm.length_mm" />
+                @if (productForm.length_mm().touched() && productForm.length_mm().invalid()) {
+                @for (error of productForm.length_mm().errors(); track error) {
+                <p class="field-warning">{{ error.message }}</p>
+                }
+                }
+            </label>
+
+            <label>
+                Volym (ml)
+                <input type="text" [formField]="productForm.volume_ml" />
+                @if (productForm.volume_ml().touched() && productForm.volume_ml().invalid()) {
+                @for (error of productForm.volume_ml().errors(); track error) {
+                <p class="field-warning">{{ error.message }}</p>
+                }
+                }
+            </label>
+
+            <label>
+                Storleksetikett
+                <input type="text" [formField]="productForm.size_label"
+                    placeholder="Måste anges om mått existerar" />
+                @if (productForm.size_label().touched() && productForm.size_label().invalid()) {
+                @for (error of productForm.size_label().errors(); track error.kind) {
+                <p class="field-warning">{{ error.message }}</p>
+                }
+                }
+            </label>
+
+            <button type="submit">Spara produkt</button>
+
+        </div>
+    </form>
+</section>

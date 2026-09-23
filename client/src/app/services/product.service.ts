@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import type { ProductCardData, AdminProductRow } from '../models/product.model';
+import type { ProductCardData, AdminProductRow, CreateProductInput } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -23,5 +23,9 @@ export class ProductService {
   deleteProduct(id: string) {
     return this.http.delete<void>(`/api/products/${id}`);
   }
+
+  createProduct(input: CreateProductInput) {
+  return this.http.post<AdminProductRow>('/api/products', input);
+}
 }
 

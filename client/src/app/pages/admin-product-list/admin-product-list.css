@@ -1,6 +1,6 @@
 .admin-table {
-  padding-bottom: var(--space-lg);
-  padding-top: var(--space-lg);
+  padding: var(--space-md);
+
 }
 
 .search-add {

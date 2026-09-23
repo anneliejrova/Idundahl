@@ -187,14 +187,18 @@ seriesRouter.get("/:slug/product-types", async (req, res, next) => {
 
   const { data, error } = await supabase
     .from("series_product_type")
-    .select("product_type:product_type_id ( id, name, slug )")
+    .select("id, product_type:product_type_id ( name, slug )")
     .eq("series_id", series.id);
 
   if (error) {
     return next(error);
   }
 
-  const productTypes = data.map((row: any) => row.product_type);
+  const productTypes = data.map((row: any) => ({
+    id: row.id,
+    name: row.product_type.name,
+    slug: row.product_type.slug,
+  }));
 
   res.json(productTypes);
 });

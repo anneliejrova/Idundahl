@@ -2,9 +2,10 @@ import { Component, inject, signal, effect, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../services/product.service';
 import type { AdminProductRow } from '../../models/product.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [],
+  imports: [RouterLink],
   selector: 'app-admin-product-list',
   styleUrl: './admin-product-list.css',
   templateUrl: './admin-product-list.html',

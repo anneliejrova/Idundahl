@@ -149,3 +149,17 @@ export interface AdminProductRow {
     series: { id: string; name: string; slug: string };
   };
 }
+
+export interface ProductFormModel {
+  price: number;
+  stock_quantity: number;
+  ean: string;
+  description: string;
+  size_label: string;
+  diameter_mm: string;
+  height_mm: string;
+  width_mm: string;
+  length_mm: string;
+  volume_ml: string;
+  image_url: string;
+}

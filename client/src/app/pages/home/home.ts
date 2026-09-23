@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Hero } from '../../components/hero/hero';
-import { SeriesCard } from '../../components/series-card/series-card';
 import { Grid } from '../../components/grid/grid';
 import { SeriesService } from '../../services/series.service';
 import { ProductService } from '../../services/product.service';
@@ -10,7 +9,7 @@ import { Spots } from '../../components/spots/spots';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, SeriesCard, Grid, ProductCard, Spots],
+  imports: [Hero, Grid, ProductCard, Spots],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
