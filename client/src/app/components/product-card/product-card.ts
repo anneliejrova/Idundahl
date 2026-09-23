@@ -1,7 +1,8 @@
-import { Component, input, computed, signal } from '@angular/core';
+import { Component, input, computed, signal, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ThemedImage } from '../themed-image/themed-image';
 import type { ProductCardData } from '../../models/product.model';
+import { BasketService } from '../../services/basket.service';
 
 @Component({
   selector: 'app-product-card',
@@ -11,6 +12,7 @@ import type { ProductCardData } from '../../models/product.model';
 })
 export class ProductCard {
   product = input.required<ProductCardData>();
+  hideSeriesLink = input(false);
 
   private liked = signal(false);
   isLiked = this.liked.asReadonly();
@@ -30,4 +32,18 @@ export class ProductCard {
       ? `https://fnnyyflzqqvqwanjmnht.supabase.co/storage/v1/object/public/images/shapes/${slug}`
       : 'https://fnnyyflzqqvqwanjmnht.supabase.co/storage/v1/object/public/images/shapes/serie';
   });
+
+  private basketService = inject(BasketService);
+
+  addToBasket(event: Event) {
+    event.stopPropagation();
+    const p = this.product();
+    this.basketService.add({
+      productId: p.id,
+      name: `${p.series_variant.series.name} ${p.series_variant.name} ${p.series_product_type.product_type.name}`,
+      price: p.price,
+      imageUrl: this.mainImageUrl(),
+      shapeSlug: p.series_product_type.product_type.shape?.slug ?? null,
+    });
+  }
 }

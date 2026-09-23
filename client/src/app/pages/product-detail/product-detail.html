@@ -1,1 +1,32 @@
-<p>product-detail works!</p>
+@if (product(); as p) {
+  <section class="product-detail">
+    <div class="product-detail-image-wrapper">
+      <app-themed-image [baseUrl]="mainImageUrl()" [fallbackUrl]="fallbackUrl()" [alt]="p.name" />
+    </div>
+    <div class="product-detail-info">
+      <h1>{{ p.series_product_type.product_type.name }}</h1>
+      <p class="product-detail-series">{{ p.series_variant.series.name }} ({{ p.series_variant.name }})</p>
+      @if (p.description) {
+        <p>{{ p.description }}</p>
+      }
+      <p>Storlek: {{ p.size_label }}</p>
+      @if (p.stock_quantity > 0) {
+        <p>{{ p.stock_quantity }} i lager</p>
+      } @else {
+        <p class="out-of-stock">Slut i lager</p>
+      }
+
+      <div class="product-detail-actions">
+        <a [routerLink]="['/series', p.series_variant.series.slug]" class="product-detail-series-link">
+          Se övriga serien →
+        </a>
+        <div class="product-detail-purchase-row">
+          <p class="product-detail-price">{{ p.price }} {{ p.currency }}</p>
+         <button type="button" class="add-to-basket" (click)="addToBasket()">Lägg i varukorg</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <app-similar-products [allProducts]="p.similarProducts" />
+}

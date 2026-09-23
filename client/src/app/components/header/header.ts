@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { Wordmark } from '../wordmark/wordmark';
 import { ThemedImage } from '../themed-image/themed-image';
+import { Wordmark } from '../wordmark/wordmark';
 
 @Component({
   imports: [RouterLink, Wordmark, ThemedImage],

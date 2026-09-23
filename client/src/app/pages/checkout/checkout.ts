@@ -1,18 +1,17 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { ThemedImage } from '../../components/themed-image/themed-image';
 import { BasketService } from '../../services/basket.service';
 
 @Component({
-  selector: 'app-basket',
-  imports: [RouterLink, ThemedImage],
-  templateUrl: './basket.html',
-  styleUrl: './basket.css',
+  selector: 'app-checkout',
+  imports: [ThemedImage],
+  templateUrl: './checkout.html',
+  styleUrl: './checkout.css',
 })
-export class Basket {
+export class Checkout {
   basketService = inject(BasketService);
 
-  increase(productId: string, currentQuantity: number) {
+    increase(productId: string, currentQuantity: number) {
     this.basketService.updateQuantity(productId, currentQuantity + 1);
   }
 

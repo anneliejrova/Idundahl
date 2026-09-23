@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import type { ProductCardData, AdminProductRow, CreateProductInput } from '../models/product.model';
+import type { ProductCardData, AdminProductRow, CreateProductInput, ProductDetail } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -12,7 +12,7 @@ export class ProductService {
 
   search(query: string) {
     return this.http.get<{ count: number; results: ProductCardData[] }>(
-      `/api/products/search?q=${encodeURIComponent(query)}`
+      `/api/products/search?q=${encodeURIComponent(query)}`,
     );
   }
 
@@ -25,7 +25,10 @@ export class ProductService {
   }
 
   createProduct(input: CreateProductInput) {
-  return this.http.post<AdminProductRow>('/api/products', input);
-}
-}
+    return this.http.post<AdminProductRow>('/api/products', input);
+  }
 
+  getBySlug(slug: string) {
+    return this.http.get<ProductDetail>(`/api/products/${slug}`);
+  }
+}

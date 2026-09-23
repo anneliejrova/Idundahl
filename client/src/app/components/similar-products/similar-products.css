@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+
+.similar-products {
+  padding: var(--space-md);
+}
+
+.similar-products-scroll {
+  display: flex;
+  gap: var(--space-md);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-block-end: var(--space-xs);
+}
+
+.similar-products-item {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+}

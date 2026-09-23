@@ -76,20 +76,25 @@ export interface ProductCardData extends ProductWithBadge {
   };
 }
 
-export interface SimilarProduct {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  published_at: string | null;
-  isNew: boolean;
-  product_image: Pick<ProductImage, "image_url" | "is_main">[];
-  series_product_type: SeriesProductTypeShapeOnly;
+export interface SimilarProduct extends ProductWithBadge {
+  product_image: Pick<ProductImage, 'image_url' | 'is_main'>[];
+  series_product_type: SeriesProductTypeCardData;
+  series_variant: {
+    name: string;
+    series: { name: string; slug: string };
+  };
 }
 
 export interface ProductDetail {
   id: string;
-  series_variant: SeriesVariant;
+  series_variant: {
+    id: string;
+    name: string;
+    slug: string;
+    image_url: string | null;
+    is_main: boolean;
+    series: { name: string; slug: string };
+  };
   series_product_type: SeriesProductTypeWithShape;
   product_image: ProductImage[];
   sku: string;
@@ -126,6 +131,7 @@ export interface CreateProductInput {
   ean?: string;
   description?: string;
   image_url?: string;
+  published_at?: string;
 }
 
 export interface AdminProductRow {
@@ -153,7 +159,6 @@ export interface AdminProductRow {
 export interface ProductFormModel {
   price: number;
   stock_quantity: number;
-  ean: string;
   description: string;
   size_label: string;
   diameter_mm: string;
@@ -162,4 +167,6 @@ export interface ProductFormModel {
   length_mm: string;
   volume_ml: string;
   image_url: string;
+  published_at: string;
+  confirmPublishToday: boolean;
 }

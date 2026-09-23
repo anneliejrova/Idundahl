@@ -39,6 +39,7 @@ header {
 
   @media (min-width: 640px) {
     justify-content: space-between;
+    padding-left: var(--space-md);
   }
 
   .search {

@@ -1,9 +1,11 @@
 .product-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card-image-wrapper {
   position: relative;
+  margin-bottom: 1rem;
 }
 
 .heart-button {
@@ -73,9 +75,10 @@
   text-decoration: underline;
 }
 
-.product-card-purchase-row {
+.product-card-purchase{
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: end;
   gap: var(--space-xs);
 }
 
@@ -91,4 +94,22 @@
   color: var(--color-bg);
   cursor: pointer;
   font-size: 0.95rem;
+}
+
+.product-card-main-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.new-badge {
+  position: absolute;
+  top: var(--space-xs);
+  left: var(--space-xs);
+  background: var(--color-attention);
+  color: var(--color-text-on-image);
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 4px;
 }

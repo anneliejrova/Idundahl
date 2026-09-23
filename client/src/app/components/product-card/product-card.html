@@ -1,45 +1,42 @@
 <article class="product-card">
-  <div class="product-card-image-wrapper">
-    <app-themed-image
-      [baseUrl]="mainImageUrl()"
-      [fallbackUrl]="fallbackUrl()"
-      [alt]="product().name"
-    />
-    <button
-      type="button"
-      class="heart-button"
-      [class.is-active]="isLiked()"
-      [attr.aria-pressed]="isLiked()"
-      aria-label="Gilla"
-      (click)="toggleLike()"
-    >
-      {{ isLiked() ? '♥' : '♡' }}
-    </button>
-  </div>
-  <div class="product-card-content">
-    <div class="product-card-text">
-      <h3 class="product-card-name">{{ product().series_product_type.product_type.name }}</h3>
-      <p class="product-card-series">
-        {{ product().series_variant.series.name }}
-        ({{ product().series_variant.name }})
-      </p>
-      @if (product().stock_quantity > 0) {
-        <p>{{ product().stock_quantity }} i lager</p>
-      } @else {
-        <p class="product-card-out-of-stock">Slut i lager</p>
-      }
+    <div class="product-card-image-wrapper">
+        <a [routerLink]="['/products', product().slug]" class="product-card-main-link">
+            <app-themed-image [baseUrl]="mainImageUrl()" [fallbackUrl]="fallbackUrl()" [alt]="product().name" />
+        </a>
+        @if (product().isNew) {
+        <span class="new-badge">Nyhet</span>
+        }
+        <button type="button" class="heart-button" [class.is-active]="isLiked()" [attr.aria-pressed]="isLiked()"
+            aria-label="Gilla" (click)="toggleLike()">
+            {{ isLiked() ? '♥' : '♡' }}
+        </button>
     </div>
+
+    <a [routerLink]="['/products', product().slug]" class="product-card-main-link">
+        <div class="product-card-text">
+            <h3 class="product-card-name">{{ product().series_product_type.product_type.name }}</h3>
+            <p class="product-card-series">
+                {{ product().series_variant.series.name }}
+                ({{ product().series_variant.name }})
+            </p>
+            @if (product().stock_quantity > 0) {
+            <p>{{ product().stock_quantity }} i lager</p>
+            } @else {
+            <p class="product-card-out-of-stock">Slut i lager</p>
+            }
+        </div>
+    </a>
+
     <div class="product-card-actions">
-      <a [routerLink]="['/products', product().slug]" class="product-card-link">
-        Visa produkt
-      </a>
-      <a [routerLink]="['/series', product().series_variant.series.slug]" class="product-card-series-link">
-        Se övriga serien →
-      </a>
-      <div class="product-card-purchase-row">
-        <p class="product-card-price">{{ product().price }} kr</p>
-        <button type="button" class="product-card-buy">Köp</button>
-      </div>
+        <div class="product-card-purchase">
+            <p class="product-card-price">{{ product().price }} kr</p>
+            <button type="button" class="product-card-buy" (click)="addToBasket($event)">Lägg i varukorg</button>
+        </div>
+        @if (!hideSeriesLink()) {
+        <a [routerLink]="['/series', product().series_variant.series.slug]" class="product-card-series-link"
+            (click)="$event.stopPropagation()">
+            Se övriga serien →
+        </a>
+        }
     </div>
-  </div>
 </article>

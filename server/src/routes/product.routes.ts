@@ -25,7 +25,8 @@ productRouter.get("/featured", async (req, res, next) => {
       "busfro-standard-2-handtags-mugg",
       "kurbits-standard-mattallrik",
       "xevrine-standard-frukostskal",
-    ]);
+    ])
+    .lte("published_at", new Date().toISOString());
 
   if (error) {
     return next(error);
@@ -124,7 +125,7 @@ productRouter.get("/:slug", async (req, res, next) => {
       `
         id,
         series_variant:series_variant_id!inner 
-            ( id, name, slug, image_url, is_main ),
+            ( id, name, slug, image_url, is_main, series:series_id ( name, slug ) ),
         series_product_type:series_product_type_id!inner 
             (id, product_type:product_type_id!inner ( id, name, slug, shape:shape_id ( slug ) )),
         product_image ( id, image_url, alt_text, is_main ),
@@ -157,14 +158,13 @@ productRouter.get("/:slug", async (req, res, next) => {
   }
 
   const { data: similarProducts, error: similarError } = await supabase
-    .from("product")
-    .select(
-      "id, name, slug, price, published_at, product_image ( image_url, is_main ), series_product_type:series_product_type_id ( product_type:product_type_id ( shape:shape_id ( slug ) ) )",
-    )
-    .eq("series_variant_id", (data.series_variant as any).id)
-    .neq("id", data.id)
-    .limit(5);
-
+  .from("product")
+  .select(
+    "*, product_image ( image_url, is_main ), series_product_type:series_product_type_id ( product_type:product_type_id ( name, shape:shape_id ( slug ) ) ), series_variant:series_variant_id ( name, series:series_id ( name, slug ) )",
+  )
+  .eq("series_variant_id", (data.series_variant as any).id)
+  .neq("id", data.id)
+  .limit(5);
   if (similarError) {
     return next(similarError);
   }

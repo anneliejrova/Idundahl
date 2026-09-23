@@ -133,7 +133,9 @@ seriesRouter.get("/:slug", async (req, res, next) => {
       .gte("published_at", sevenDaysAgo.toISOString()),
     supabase
       .from("product")
-      .select("*")
+      .select(
+        "*, product_image ( image_url, is_main ), series_product_type:series_product_type_id ( product_type:product_type_id ( name, shape:shape_id ( slug ) ) ), series_variant:series_variant_id ( name, series:series_id ( name, slug ) )",
+      )
       .eq("series_variant_id", mainVariant.id),
   ]);
 

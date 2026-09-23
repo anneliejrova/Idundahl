@@ -3,8 +3,8 @@
   padding: var(--space-md);
 }
 
-h1{
-    padding-bottom: var(--space-sm);
+h1 {
+  padding-bottom: var(--space-sm);
 }
 
 .product-form {
@@ -82,6 +82,16 @@ h1{
           background: var(--color-accent-1);
         }
       }
+    }
+  }
+
+  .publish-today-check {
+    flex-direction: row !important;
+    align-items: center;
+    gap: var(--space-xs);
+
+    input[type='checkbox'] {
+      width: auto;
     }
   }
 

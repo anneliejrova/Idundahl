@@ -7,6 +7,8 @@ import { SeriesDetail } from './pages/series-detail/series-detail';
 import { AdminProductForm } from './pages/admin-product-form/admin-product-form';
 import { AdminProductList } from './pages/admin-product-list/admin-product-list';
 import { Basket } from './pages/basket/basket';
+import { Checkout } from './pages/checkout/checkout';
+import { Category } from './pages/category/category';
 
 
 export const routes: Routes = [
@@ -16,7 +18,9 @@ export const routes: Routes = [
   { path: 'series/:slug', component: SeriesDetail },
   { path: 'series/:slug/:variantSlug', component: SeriesDetail },
   { path: 'products/:slug', component: ProductDetail },
+  { path: 'category/:slug', component: Category },
   { path: 'admin/products/new', component: AdminProductForm },
   { path: 'admin/products', component: AdminProductList },
-  { path: 'basket', component: Basket }
+  { path: 'basket', component: Basket },
+  { path: 'checkout', component: Checkout }
 ];

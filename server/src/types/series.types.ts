@@ -1,5 +1,6 @@
 import type { ProductWithBadge } from "./product.types.js";
 import type { Credit } from "./credit.types.js";
+import type { SimilarProduct } from "./product.types.js";
 
 export interface SeriesVariant {
   id: string;
@@ -27,7 +28,7 @@ export interface Series {
   designer: Pick<Credit, "id" | "name"> | null;
   collaborator: Pick<Credit, "id" | "name"> | null;
   series_variant: SeriesVariantWithBadge[];
-  mainVariantProducts: ProductWithBadge[];
+  mainVariantProducts: SimilarProduct[];
 }
 
 export interface SeriesListRow {

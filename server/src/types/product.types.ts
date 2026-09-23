@@ -60,20 +60,30 @@ export interface ProductImage {
   is_main: boolean;
 }
 
-export interface SimilarProduct {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  published_at: string | null;
-  isNew: boolean;
+export interface SimilarProduct extends ProductWithBadge {
   product_image: Pick<ProductImage, "image_url" | "is_main">[];
-  series_product_type: SeriesProductTypeShapeOnly;
+  series_product_type: {
+    product_type: {
+      name: string;
+      shape: Shape | null;
+    };
+  };
+  series_variant: {
+    name: string;
+    series: { name: string; slug: string };
+  };
 }
 
 export interface ProductDetail {
   id: string;
-  series_variant: SeriesVariant;
+  series_variant: {
+    id: string;
+    name: string;
+    slug: string;
+    image_url: string | null;
+    is_main: boolean;
+    series: { name: string; slug: string };
+  };
   series_product_type: SeriesProductTypeWithShape;
   product_image: ProductImage[];
   sku: string;
@@ -107,9 +117,9 @@ export interface CreateProductInput {
   width_mm?: number;
   length_mm?: number;
   volume_ml?: number;
-  ean?: string;
   description?: string;
   image_url?: string;
+  published_at?: string;
 }
 
 export interface AdminProductRow {

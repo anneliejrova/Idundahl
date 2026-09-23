@@ -1,0 +1,12 @@
+@if (products().length > 0) {
+  <section class="similar-products content-wrapper">
+    <h2>Liknande produkter</h2>
+    <div class="similar-products-scroll">
+      @for (sp of products(); track sp.id) {
+        <div class="similar-products-item">
+          <app-product-card [product]="sp" />
+        </div>
+      }
+    </div>
+  </section>
+}

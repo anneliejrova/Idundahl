@@ -1,4 +1,4 @@
-<section class="product-form-page">
+<section class=".product-form-page">
     <h1>Ny produkt</h1>
     <form class="product-form" (submit)="onSubmit($event)">
         <div class="details">
@@ -43,6 +43,7 @@
                     <input type="text" [value]="productTypeInput()"
                         (input)="onProductTypeInput($any($event.target).value)"
                         (focus)="showProductTypeSuggestions.set(true)" (blur)="showProductTypeSuggestions.set(false)"
+                        (keydown.enter)="onProductTypeFieldEnter($event)"
                         [placeholder]="selectedSeries() ? 'Skriv för att söka...' : 'Du måste välja serie först'"
                         [disabled]="!selectedSeries()" autocomplete="off" />
                     @if (showProductTypeSuggestions() && productTypeSuggestions().length > 0) {
@@ -82,11 +83,6 @@
                 <p class="field-warning">{{ error.message }}</p>
                 }
                 }
-            </label>
-
-            <label>
-                EAN
-                <input type="text" [formField]="productForm.ean" />
             </label>
 
             <label>
@@ -153,14 +149,28 @@
 
             <label>
                 Storleksetikett
-                <input type="text" [formField]="productForm.size_label"
-                    placeholder="Måste anges om mått existerar" />
+                <input type="text" [formField]="productForm.size_label" placeholder="Måste anges om mått existerar" />
                 @if (productForm.size_label().touched() && productForm.size_label().invalid()) {
                 @for (error of productForm.size_label().errors(); track error.kind) {
                 <p class="field-warning">{{ error.message }}</p>
                 }
                 }
             </label>
+
+            <label>
+                Publiceringsdatum
+                <input type="date" [formField]="productForm.published_at" />
+            </label>
+
+            <label class="publish-today-check">
+                <input type="checkbox" [formField]="productForm.confirmPublishToday" />
+                Ja, denna produkt ska publiceras IDAG
+            </label>
+            @if (productForm.confirmPublishToday().touched() && productForm.confirmPublishToday().invalid()) {
+            @for (error of productForm.confirmPublishToday().errors(); track error.kind) {
+            <p class="field-warning">{{ error.message }}</p>
+            }
+            }
 
             <button type="submit">Spara produkt</button>
 

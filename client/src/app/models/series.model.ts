@@ -1,3 +1,5 @@
+import type { ProductCardData } from './product.model';
+
 export interface Credit {
   id: string;
   name: string;
@@ -21,6 +23,6 @@ export interface SeriesModel {
   designer: Credit | null;
   collaborator: Credit | null;
   series_variant: SeriesVariant[];
-  mainVariantProducts: unknown[];
+  mainVariantProducts: ProductCardData[];
   isNew: boolean;
 }
