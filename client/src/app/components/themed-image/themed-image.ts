@@ -1,4 +1,4 @@
-import { Component, input, signal, computed, inject } from '@angular/core';
+import { Component, input, computed, inject, linkedSignal } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 
 @Component({
@@ -12,8 +12,11 @@ export class ThemedImage {
   fallbackUrl = input.required<string>();
   alt = input('');
 
-  private failedDark = signal(false);
-  private failedBase = signal(false);
+  // Identifierar vilken bild komponenten visar just nu – ändras den, nollställs felflaggorna
+  private imageKey = computed(() => `${this.baseUrl()}|${this.fallbackUrl()}`);
+
+  private failedDark = linkedSignal({ source: this.imageKey, computation: () => false });
+  private failedBase = linkedSignal({ source: this.imageKey, computation: () => false });
 
   isFallback = computed(() => !this.baseUrl() || this.failedBase());
 
@@ -31,7 +34,6 @@ export class ThemedImage {
     if (!this.failedBase()) {
       this.failedBase.set(true);
       this.failedDark.set(false);
-      return;
     }
   }
 }
