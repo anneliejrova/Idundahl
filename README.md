@@ -1,175 +1,127 @@
 # Idundahl
 
-Skolprojekt i kursen JavaScript3 — en e-handelsliknande sajt för ett fiktivt porslinsföretag, byggd med Angular, Express och Supabase.
+En e-handelssajt för ett fiktivt porslinsföretag, byggd med Angular, Express och Supabase. Projektet började som ett skolprojekt i kursen JavaScript 3, men jag byggde det bredare än uppgiften krävde för att förstå hela kedjan från databas till gränssnitt.
 
-Kursen är fokuserad på Angular, men inkluderade databas + Express + Angular. Jag valde att använda Supabase som bostad för min db men hellre än att utnyttja Supabases färdiga lösningar valde jag att fortfarande gå igenom ett Express lager. Anledningen var att jag ville få insyn i **hela** flödet, inte bara frontend-delen — om jag hade valt bort Express hade jag missat att förstå detaljerna kring hur datan faktiskt hänger ihop.
+Desktop i darkmode och lightmode: 
+<p>
+  <img src="docs/screenshot-light.png" alt="Startsida i ljust läge" width="49%">
+  <img src="docs/screenshot-dark.png" alt="Startsida i mörkt läge" width="49%">
+</p>
 
 ---
 
 ## Tech stack
 
-- **Angular 22 + TypeScript** — frontend
+- **Angular 22 + TypeScript** för frontend, med signals och Signal Forms
+- **Express + TypeScript** som API-lager mellan Angular och databasen
+- **Supabase (Postgres)** för databas och bildlagring
 
-- **Express + TypeScript** — API-lager mellan Angular och databasen
-
-- **Supabase (Postgres)** — databas + filhantering för bilder
-
----
-
-## Hur man startar projektet
-
-Projektet har två delar som körs separat, i varsin terminal.
-
-**Server:**
-
-```bash
-
-cd server
-
-npm install
-
-npm run dev
-
-```
-
-Kör på `http://localhost:8000`.
-
-**Client:**
-
-```bash
-
-cd client
-
-npm install
-
-npm start
-
-```
-
-Kör på `http://localhost:4200`, och pratar med servern via en proxy (`proxy.config.json`) — ingen CORS-konfiguration behövs.
-
-**Miljövariabler:** servern behöver en `.env`-fil (finns inte i repot av säkerhetsskäl) med Supabase-uppgifter:
-
-```
-
-PORT=8000
-
-SUPABASE_URL=...
-
-SUPABASE_SERVICE_KEY=...
-
-```
+Supabase erbjuder färdiga lösningar för att prata direkt med databasen från frontend, men jag valde att ändå gå via ett eget Express-lager. Jag ville ha insyn i hela flödet, inte bara frontend-delen, och förstå hur datan faktiskt hänger ihop innan den når gränssnittet.
 
 ---
 
-## Vad som är uppfyllt
+## Funktioner
 
-**G — alla krav uppfyllda:**
-
-- Start (Hero, Spots, Populära Produkter)
-
-- Sökresultat
-
-- Produktdetaljsida
-
-- Administration: lista produkter
-
-- Administration: ny produkt
-
-**VG — alla krav uppfyllda:**
-
-- "Nyhet"-bricka på produktkort
-
-- Liknande produkter, minst 5 kort, bläddringsbart
-
-- Varukorg (`/basket`) med redigerbart antal
-
-- "Lägg i varukorg" fungerar på riktigt (sparas i webbläsarens `localStorage`)
-
-- Kassasida med kunduppgifter — "Köp"-knappen gör medvetet ingenting, exakt som wireframen visade
+- Startsida med hero, kategorispots och rekommenderade produkter
+- Sök på produktnamn
+- Produktsidor med bildgalleri och bläddringsbar karusell med liknande produkter
+- "Nyhet"-bricka på produkter publicerade de senaste sju dagarna
+- Seriesidor, kategorisidor och en översikt över alla serier
+- Varukorg med redigerbart antal, sparad i `localStorage`
+- Kassasida med kunduppgifter (utan riktig betalning)
+- Admin: produktlista filtrerbar per serie, och formulär för nya produkter
+- Ljust och mörkt läge som följer systeminställningen
+- Fluid layout som skalar mellan mobil och desktop utan fasta brytpunkter
 
 ---
 
-## Var jag följt mallen, och var jag valt att avvika
+## Designval
 
-Uppgiften tillåter (och kräver) att man använder AI, och sätter inget tak på komplexitet — så jag har på några ställen valt att bygga mer än vad kravet bad om, om det kändes motiverat.
+**Normaliserad databas.** Produkterna ligger inte i en platt tabell, utan är uppdelade i kategori, serie, variant, produkttyp och produkt. Det speglar hur en porslinsserie faktiskt är uppbyggd: en serie har flera varianter (färger), och varje variant har flera produkter. Priset är ett mer omfattande admin-formulär, där man väljer serie, variant och produkttyp, men i gengäld blir datan konsekvent och lätt att bygga navigering kring.
 
-**Följt mallen rakt av:**
+**SKU genereras av servern.** Admin skriver aldrig en SKU själv. Servern bygger den automatiskt från serie, produkttyp, variant och storlek, så det finns ingen risk för felstavning eller inkonsekventa format.
 
-- G/VG-sidornas grundstruktur (Start, Sökresultat, Detaljsida, Admin)
+**Skydd mot misstag i admin.** Genomgående har jag försökt låta systemet ta hand om det som är lätt att göra fel. Några exempel:
+- Produkttyp-listan i formuläret visar bara typer som hör till vald serie, och servern validerar dessutom kopplingen en gång till.
+- Om ett mått anges måste också en storleksetikett anges. Saknas både mått och etikett sätter servern "Lagom".
+- Publiceringsdatum kan sättas fritt, men väljer man dagens datum måste man bocka i en bekräftelse. Det ska vara svårt att publicera något för tidigt av misstag.
 
-- Kassasidans formulärfält och att "Köp"-knappen inte gör något
-
-**Medvetet gått längre än kravet:**
-
-- **Databasen är normaliserad, inte platt.** Uppgiften visar en enda produkttabell (namn, bild, pris osv). Min modell har separata tabeller för kategori, serie, variant, produkttyp och produkt, kopplade till varandra. Det gör admin-formuläret krångligare än mallens fem fält (man måste välja serie, variant och produkttyp också), men det speglar hur en riktig porslinsserie faktiskt är uppbyggd — en serie har flera varianter (färger), och varje variant har flera produkter.
-
-- **SKU sätts automatiskt av servern, inte av admin.** Mallen visar ett fritt textfält för SKU. Jag byggde istället en funktion som bygger SKU:n automatiskt utifrån serie, produkttyp, variant och storlek — admin behöver aldrig skriva eller komma ihåg ett eget format, och risken för felstavning/inkonsekvens försvinner.
-
-- **EAN-fältet finns i databasen men syns inte i admin-formuläret.** Eftersom alla serier i projektet är påhittade och aldrig haft en riktig streckkod, tog jag bort fältet ur formuläret istället för att låta det stå tomt i onödan.
-
-- **Extra sidor utöver kraven:** en sida som listar alla serier, och fyra kategorisidor (kopplade från Start-sidans "Spots") som visar vilka serier som hör till respektive kategori. Ingen av dem krävdes, men de gör sajten lättare att navigera och kändes närmare "en riktig product".
-
-- **Publiceringsdatum i admin-formuläret.** Mallen nämner att produkter med framtida publiceringsdatum inte ska visas, vilket fick mig att inse att admin borde kunna sätta ett eget datum när en produkt "skapas" eller går live (inte bara "nu"). Jag lade till ett datumfält, plus en kryssruta som måste bockas i om datumet är dagens — annars går det inte att skicka formuläret. Poängen är att göra det svårt att av misstag publicera något för tidigt.
-
-- **Intrinsic/fluid design, istället för wireframens tre fasta brytpunkter.**  Wireframen är byggd kring tre specifika breddmått (som jag estimate till ungefär 375, tablet på 640 och desktop 1024px). Jag valde att i stället för att luta mig mot intrinsic design och bygga layouten med clamp(), container queries och uträknade grid-formler, som matchar wireframens mått vid de angivna punkterna men skalar mjukt mellan dem, snarare än att hoppa i tvära steg. Jag föredrar den principen framför fasta brytpunkter rent generellt. En positiv bieffekt jag inte planerat för: eftersom layouten är byggd för att skala kontinuerligt snarare än att reagera på specifika skärmstorlekar, fungerade den direkt även i liggande läge på mobil, utan extra anpassning. Jag brukar planera för liggande läge medvetet, men den här gången kom det på köpet av hur resten redan var byggt. Hero-bilden är det enda stället jag hade kunnat tänkt mig viss justering av, beskärningen känns inte lika genomtänkt i liggande läge som resten av sidan.
+**Intrinsic design i stället för brytpunkter.** Layouten bygger på `clamp()`, container queries och uträknade grid-formler i stället för tre fasta brytpunkter. Den skalar mjukt mellan storlekarna, och en bieffekt jag inte planerat för var att liggande läge på mobil fungerade direkt utan extra anpassning.
 
 ---
 
-## Tekniska val jag vill lyfta fram (Angular-delen)
+## Tekniska lösningar jag vill lyfta fram
 
-**Formulär är till min bästa förmåga byggt med Signal Forms.** Jag har velat jobba mot senaste Angular-praxis genom hela projektet, så jag valde den här tekniken från början. Formuläret validerar bland annat att pris och lagersaldo faktiskt är ifyllda (inte bara `0`, vilket visade sig vara en lurig detalj — ett tomt sifferfält rapporterar `0`, inte "tomt"). Samt att jag skapade en regel om att en storleksetikett måste anges om något mått fylls i, annars löser Express det med det lilla ordet "Lagom".
+**Signal Forms.** Admin-formuläret är byggt med Angulars nya Signal Forms. En lurig detalj var att ett tomt sifferfält rapporterar `0` snarare än "tomt". För att pris och lagersaldo inte ska kunna skickas tomma behandlar valideringen därför `0` som ett ej ifyllt värde. Bieffekten är att en produkt inte kan läggas till med lagersaldo `0`, något jag medvetet accepterade för att prioritera annat.
 
-**Ett medvetet undantag från signals: `switchMap`.** Admin-formulärets sökfält (serie → variant → produkttyp) beror på varandra — väljer man en serie ska bara den seriens produkttyper visas, hämtat med ett nytt nätverksanrop. Jag använde RxJS's `switchMap` för det, kombinerat med `toObservable`/`toSignal` som brygga mellan de två systemen, eftersom `switchMap` löser ett problem som jag inte kunde hitta en enkel, inbyggd motsvarighet till inom signals: att automatiskt avbryta ett gammalt, pågående anrop om användaren hinner byta val innan svaret kommit tillbaka.
+**`switchMap` som medvetet undantag från signals.** I admin-formuläret beror fälten på varandra: väljer man en serie hämtas den seriens produkttyper med ett nytt anrop. Här använde jag RxJS `switchMap` tillsammans med `toObservable`/`toSignal`, eftersom det automatiskt avbryter ett pågående anrop om användaren hinner byta val innan svaret kommit. Jag hittade ingen lika enkel inbyggd motsvarighet inom signals.
 
-**Dark mode, byggt för att fungera oavsett vald teknik.** Jag ville ha med dark mode av tillgänglighetsskäl och för att öva på något jag vill bli bättre på. Bilder byter automatiskt mellan en ljus och en mörk variant beroende på användarens systeminställning (eller ett manuellt val senare, om jag bygger en switch-knapp). Första lösningar AI presenterade var picture men tyckte det kändes opraktiskt att sätta på varje bild. Så jag efterfrågade om det inte kunde göras i ändelsen. Då fick jag bättre svar, min tanke från början var att jag skulle behöva namnge båda varianterna separat (`_light`/`_dark`), men jag hade snubblat på en praxis igen och fick lära mig det räckte med bas-filnamnet som ljust läge, och bara `_dark` som valfri extra fil — enklare än jag väntat mig. Alt-text på bilder hann jag inte få med i den här versionen, en tydlig lucka jag kommer täppa till om projektet blir ett portföljprojekt senare.
+**Temaanpassade bilder med fallback i flera steg** ([`themed-image.ts`](client/src/app/components/themed-image/themed-image.ts)). Bilderna finns i en ljus basversion och en valfri `_dark`-version. Databasen lagrar bara bas-URL:en, och komponenten avgör i webbläsaren om en mörk version finns genom bildens `error`-event. Saknas den mörka används den ljusa, och saknas bilden helt visas en platshållare. Mitt första förslag var att namnge båda versionerna (`_light`/`_dark`), men att låta basfilen vara standard och `_dark` en valfri override visade sig vara enklare och fungerar för alla bilder på sajten, även de som aldrig får en mörk version.
 
-**Fallback-bilder grupperade efter FORM, inte efter produkttyp.** Många av de 132 produkterna saknar fortfarande riktiga foton (bara en serie hann bli helt klar). Istället för att skapa en fallback-bild per produkttyp (41 stycken) insåg jag att flera produkttyper delar samma grundform — en assiett och en mattallrik ser i princip likadana ut, bara olika stora. Jag grupperade produkttyperna i 19 formgrupper istället, vilket betydde 19 bilder att skapa istället för 41.
+**Platshållarbilder grupperade efter form.** Många produkter saknar ännu riktiga foton. I stället för en platshållare per produkttyp (41 st) grupperade jag typerna efter grundform, eftersom till exempel en assiett och en mattallrik ser i princip likadana ut. Det blev 19 bilder i stället för 41.
 
 ---
 
-## Tankar efter vägen — vad jag skulle gjort annorlunda
+## Arbetssätt
 
-- Jag bytte riktning några gånger under bildhanteringen (SVG → WebP, produktbild → sammansatt bild per variant) innan jag landade rätt. Hade jag vetat AI-begränsningar från början hade jag valt en ändå lättare produkttyp. Nästa gång blir det kaffe eller ljus med samma paketering hela vägen, men jag lärde mig mer av att faktiskt testa fel vägar och planera för dem innan jag anpassade mig.
+Jag har använt AI som bollplank genom hela projektet, men med målet att förstå varje lösning innan den hamnade i koden. Flera av de bättre lösningarna kom av att jag ifrågasatte det första förslaget, som bildnamngivningen ovan. Beslut och felsökning har jag dokumenterat löpande i separata loggar, vilket gjorde det lättare att hålla fast vid tidigare val och att hitta tillbaka när samma typ av fel dök upp igen.
 
-- Jag skrev flera gånger kod som "kändes klar" i huvudet men aldrig faktiskt sparades i rätt fil, vilket gav samma sorts fel upprepade gånger. Att alltid dubbelkolla att en ändring verkligen ligger i filen och i värsta fall känna igen var den saknas är en vana jag tar med mig framåt.
+---
+
+## Lärdomar
+
+- **Välj material efter verktygens begränsningar.** Produktbilderna är AI-genererade, och porslin visade sig svårt att få konsekvent. Jag bytte riktning flera gånger (SVG till WebP, enskilda produktbilder till sammansatta bilder per variant) innan jag landade. Nästa gång skulle jag välja en produkt som är enklare att avbilda, men jag lärde mig mycket av att planera om efter hand.
+- **Kontrollera att ändringen faktiskt ligger i filen.** Flera gånger kändes kod klar i huvudet men hade aldrig sparats på rätt ställe, vilket gav samma typ av fel om och om igen. Att alltid dubbelkolla är en vana jag tar med mig.
 
 ---
 
 ## Kända begränsningar
 
-- De flesta av de 132 produkterna saknar riktiga foton — de visar en formbaserad platshållarbild istället. Bara en serie, Geometria har fullständiga produktbilder i två varianter.
+- De flesta av de 132 produkterna saknar riktiga foton och visar en formbaserad platshållare. Serien Geometria har fullständiga produktbilder i två varianter.
+- Produktbeskrivningar som saknades är just nu lorem ipsum.
+- Variantbyte på seriesidan visar alltid huvudvarianten.
+- Admin-endpoints är öppna utan inloggning.
+- Bilderna saknar ännu alt-text.
+- En ny produkt kan inte läggas till med lagersaldo `0`, eftersom formuläret tolkar `0` som ett tomt fält.
 
-- Produktbeskrivningar är just nu lorem ipsum-text för de produkter som saknade egen beskrivning, för att kunna visa hur sidan ser ut med text. Inte avsedd som riktigt innehåll.
+---
 
-- Variant-switching på serie-sidan visar alltid huvudvarianten, oavsett vilken variant man klickade sig dit ifrån.
+## Vidareutveckling i mån av tid
 
-- EAN kan tekniskt sparas i databasen men fylls aldrig i via adminformuläret, av skäl som beskrivs ovan.
+Utanför skolarbetet vill jag fortsätta utveckla projektet. Det jag prioriterar:
 
-## I listan av To-do för att detta ska bli ett portföljprojekt
+- **Funktionalitet:** variantbyte på seriesidan utan omladdning, admin-inloggning, ett riktigt orderflöde med orderbekräftelse, och "gillade" produkter sparade i `localStorage`
+- **Tillgänglighet och tema:** alt-text på alla bilder, och en knapp för att växla mellan ljust och mörkt läge manuellt
+- **Innehåll:** riktiga produktbeskrivningar, stämningsbilder och beskrivningar för fler serier, fler produktbilder, och en hero-bild vars beskärning fungerar lika bra i liggande mobilläge
 
-- Variant-switching på serie-sidan (byta färg/variant utan att ladda om — isFreshLoad-logiken var redan planerad i detalj men aldrig implementerad)
+---
 
-- requireAdmin — admin-inloggning, POST /api/products är öppen utan skydd
+## Kom igång
 
-- "Gillade" (hjärtat) spara i localStorage.
+Projektet består av två delar som körs i varsin terminal.
 
-- Fullständigt orderflöde (riktig POST /api/orders, orderbekräftelse)
+**Server:**
 
-- Switch-knapp light-/darkmode
+```bash
+cd server
+npm install
+npm run dev
+```
 
-- Mood-bilder + description för 6 av 8 serier och flytta nuvarande Hero till att bli "Serie Heros"
+Körs på `http://localhost:8000`. Servern behöver en `.env`-fil med Supabase-uppgifter (ingår inte i repot):
 
-- Riktiga produktbeskrivningar istället för lorem ipsum
+```
+PORT=8000
+SUPABASE_URL=...
+SUPABASE_SERVICE_KEY=...
+```
 
-- I mån av tid fler produktbilder
+**Client:**
 
-- Alt-text på bilder (tillgänglighet)
+```bash
+cd client
+npm install
+npm start
+```
 
-- Trust-badges innehåll mer rätt för poslin
-
-- stock_quantity = 0 borde vara giltigt (just nu blockerat av samma regel som pris)
-
-- Hero, ny designad för hela produkten där bildens beskärning funkar lika bra i liggande mobilläge
-
-- "Populära produkter" → "Rekommenderade produkter" (rubrik + klassnamn)
+Körs på `http://localhost:4200` och når servern via en proxy (`proxy.config.json`), så ingen CORS-konfiguration behövs.
