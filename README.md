@@ -2,10 +2,10 @@
 
 En e-handelssajt för ett fiktivt porslinsföretag, byggd med Angular, Express och Supabase. Projektet började som ett skolprojekt i kursen JavaScript 3, men jag byggde det bredare än uppgiften krävde för att förstå hela kedjan från databas till gränssnitt.
 
-Desktop i darkmode och lightmode: 
+*Desktop i lightmode och darkmode:*
 <p>
-  <img src="docs/screenshot-light.png" alt="Startsida i ljust läge" width="49%">
-  <img src="docs/screenshot-dark.png" alt="Startsida i mörkt läge" width="49%">
+  <img src="docs/screenshot-light.png" alt="Startsida i ljust läge" width="48%">&nbsp;&nbsp;&nbsp;
+  <img src="docs/screenshot-dark.png" alt="Startsida i mörkt läge" width="48%">
 </p>
 
 ---
@@ -22,7 +22,7 @@ Supabase erbjuder färdiga lösningar för att prata direkt med databasen från 
 
 ## Funktioner
 
-- Startsida med hero, kategorispots och rekommenderade produkter
+- Startsida med hero, kategorispots och populära produkter
 - Sök på produktnamn
 - Produktsidor med bildgalleri och bläddringsbar karusell med liknande produkter
 - "Nyhet"-bricka på produkter publicerade de senaste sju dagarna
@@ -37,7 +37,12 @@ Supabase erbjuder färdiga lösningar för att prata direkt med databasen från 
 
 ## Designval
 
-**Normaliserad databas.** Produkterna ligger inte i en platt tabell, utan är uppdelade i kategori, serie, variant, produkttyp och produkt. Det speglar hur en porslinsserie faktiskt är uppbyggd: en serie har flera varianter (färger), och varje variant har flera produkter. Priset är ett mer omfattande admin-formulär, där man väljer serie, variant och produkttyp, men i gengäld blir datan konsekvent och lätt att bygga navigering kring.
+**Normaliserad databas.** Produkterna ligger inte i en platt tabell, utan är uppdelade i kategori, serie, variant, produkttyp och produkt. Det speglar hur en porslinsserie faktiskt är uppbyggd: en serie har flera varianter (färger), och varje variant har flera produkter. Priset är ett mer omfattande admin-formulär, där man väljer serie, variant och produkttyp, men i gengäld blir datan konsekvent och lätt att bygga navigering kring. 
+
+<details>
+  <summary>Visa databasschema</summary>
+  <img src="docs/database-schema.png" alt="Databasschema">
+</details><br>
 
 **SKU genereras av servern.** Admin skriver aldrig en SKU själv. Servern bygger den automatiskt från serie, produkttyp, variant och storlek, så det finns ingen risk för felstavning eller inkonsekventa format.
 
@@ -47,6 +52,12 @@ Supabase erbjuder färdiga lösningar för att prata direkt med databasen från 
 - Publiceringsdatum kan sättas fritt, men väljer man dagens datum måste man bocka i en bekräftelse. Det ska vara svårt att publicera något för tidigt av misstag.
 
 **Intrinsic design i stället för brytpunkter.** Layouten bygger på `clamp()`, container queries och uträknade grid-formler i stället för tre fasta brytpunkter. Den skalar mjukt mellan storlekarna, och en bieffekt jag inte planerat för var att liggande läge på mobil fungerade direkt utan extra anpassning.
+
+*Stående och liggande mobil screenshots*
+<p>
+  <img src="docs/mobile-screenshot-dark.png" alt="Mobil, stående, mörkt läge" height="300">&nbsp;&nbsp;&nbsp;
+  <img src="docs/landscape-mobile-screenshot-light.png" alt="Mobil, liggande, ljust läge" height="300">
+</p>
 
 ---
 
@@ -91,7 +102,6 @@ Jag har använt AI som bollplank genom hela projektet, men med målet att först
 Utanför skolarbetet vill jag fortsätta utveckla projektet. Det jag prioriterar:
 
 - **Funktionalitet:** variantbyte på seriesidan utan omladdning, admin-inloggning, ett riktigt orderflöde med orderbekräftelse, och "gillade" produkter sparade i `localStorage`
-- **Tillgänglighet och tema:** alt-text på alla bilder, och en knapp för att växla mellan ljust och mörkt läge manuellt
 - **Innehåll:** riktiga produktbeskrivningar, stämningsbilder och beskrivningar för fler serier, fler produktbilder, och en hero-bild vars beskärning fungerar lika bra i liggande mobilläge
 
 ---
@@ -125,3 +135,4 @@ npm start
 ```
 
 Körs på `http://localhost:4200` och når servern via en proxy (`proxy.config.json`), så ingen CORS-konfiguration behövs.
+
